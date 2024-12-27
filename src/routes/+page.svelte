@@ -1,2 +1,20 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import FilterEditor from '$lib/components/FilterEditor.svelte';
+</script>
+
+<main>
+  <FilterEditor />
+
+  <span>heyaa</span>
+</main>
+
+<style>
+  main {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
