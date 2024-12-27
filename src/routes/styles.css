@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope');
+
+:root {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+  --clr-bg: #17191C;
+  --clr-text: #FEFEFE;
+  --clr-primary: #97CAE4;
+  --clr-secondary: #2A2C32;
+
+  --corner-rad: 0.25rem;
+
+  color-scheme: light dark;
+}
+
+:root {
+
+  /* --base-50dn: #ffffff;
+  --base-50up: #000000; */
+
+  --base-50dn: var(--clr-text);
+  --base-50up: var(--clr-bg);
+
+  /* colors */
+
+  --clr-primary-50: color-mix(in srgb, var(--clr-primary), var(--base-50dn) 95%);
+  --clr-primary-100: color-mix(in srgb, var(--clr-primary), var(--base-50dn) 80%);
+  --clr-primary-200: color-mix(in srgb, var(--clr-primary), var(--base-50dn) 70%);
+  --clr-primary-300: color-mix(in srgb, var(--clr-primary), var(--base-50dn) 50%);
+  --clr-primary-400: color-mix(in srgb, var(--clr-primary), var(--base-50dn) 20%);
+  --clr-primary-500: color-mix(in srgb, var(--clr-primary), var(--base-50dn) 0%);
+  --clr-primary-600: color-mix(in srgb, var(--clr-primary), var(--base-50up) 20%);
+  --clr-primary-700: color-mix(in srgb, var(--clr-primary), var(--base-50up) 50%);
+  --clr-primary-800: color-mix(in srgb, var(--clr-primary), var(--base-50up) 70%);
+  --clr-primary-900: color-mix(in srgb, var(--clr-primary), var(--base-50up) 80%);
+  --clr-primary-950: color-mix(in srgb, var(--clr-primary), var(--base-50up) 95%);
+  
+  --clr-secondary-50: color-mix(in srgb, var(--clr-secondary), var(--base-50dn) 95%);
+  --clr-secondary-100: color-mix(in srgb, var(--clr-secondary), var(--base-50dn) 80%);
+  --clr-secondary-200: color-mix(in srgb, var(--clr-secondary), var(--base-50dn) 70%);
+  --clr-secondary-300: color-mix(in srgb, var(--clr-secondary), var(--base-50dn) 50%);
+  --clr-secondary-400: color-mix(in srgb, var(--clr-secondary), var(--base-50dn) 20%);
+  --clr-secondary-500: color-mix(in srgb, var(--clr-secondary), var(--base-50dn) 0%);
+  --clr-secondary-600: color-mix(in srgb, var(--clr-secondary), var(--base-50up) 20%);
+  --clr-secondary-700: color-mix(in srgb, var(--clr-secondary), var(--base-50up) 50%);
+  --clr-secondary-800: color-mix(in srgb, var(--clr-secondary), var(--base-50up) 70%);
+  --clr-secondary-900: color-mix(in srgb, var(--clr-secondary), var(--base-50up) 80%);
+  --clr-secondary-950: color-mix(in srgb, var(--clr-secondary), var(--base-50up) 95%);
+
+
+  /* shades */
+  --clr-primary-t50: rgb(from var(--clr-primary) r g b / 5%);
+  --clr-primary-t100: rgb(from var(--clr-primary) r g b / 10%);
+  --clr-primary-t200: rgb(from var(--clr-primary) r g b / 20%);
+  --clr-primary-t300: rgb(from var(--clr-primary) r g b / 30%);
+  --clr-primary-t400: rgb(from var(--clr-primary) r g b / 40%);
+  --clr-primary-t500: rgb(from var(--clr-primary) r g b / 50%);
+  --clr-primary-t600: rgb(from var(--clr-primary) r g b / 60%);
+  --clr-primary-t700: rgb(from var(--clr-primary) r g b / 70%);
+  --clr-primary-t800: rgb(from var(--clr-primary) r g b / 80%);
+  --clr-primary-t900: rgb(from var(--clr-primary) r g b / 90%);
+
+  --clr-secondary-t50: rgb(from var(--clr-secondary) r g b / 5%);
+  --clr-secondary-t100: rgb(from var(--clr-secondary) r g b / 10%);
+  --clr-secondary-t200: rgb(from var(--clr-secondary) r g b / 20%);
+  --clr-secondary-t300: rgb(from var(--clr-secondary) r g b / 30%);
+  --clr-secondary-t400: rgb(from var(--clr-secondary) r g b / 40%);
+  --clr-secondary-t500: rgb(from var(--clr-secondary) r g b / 50%);
+  --clr-secondary-t600: rgb(from var(--clr-secondary) r g b / 60%);
+  --clr-secondary-t700: rgb(from var(--clr-secondary) r g b / 70%);
+  --clr-secondary-t800: rgb(from var(--clr-secondary) r g b / 80%);
+  --clr-secondary-t900: rgb(from var(--clr-secondary) r g b / 90%);
+
+  --clr-bg-t50: rgb(from var(--clr-bg) r g b / 5%);
+  --clr-bg-t100: rgb(from var(--clr-bg) r g b / 10%);
+  --clr-bg-t200: rgb(from var(--clr-bg) r g b / 20%);
+  --clr-bg-t300: rgb(from var(--clr-bg) r g b / 30%);
+  --clr-bg-t400: rgb(from var(--clr-bg) r g b / 40%);
+  --clr-bg-t500: rgb(from var(--clr-bg) r g b / 50%);
+  --clr-bg-t600: rgb(from var(--clr-bg) r g b / 60%);
+  --clr-bg-t700: rgb(from var(--clr-bg) r g b / 70%);
+  --clr-bg-t800: rgb(from var(--clr-bg) r g b / 80%);
+  --clr-bg-t900: rgb(from var(--clr-bg) r g b / 90%);
+
+  --clr-text-t50: rgb(from var(--clr-text) r g b / 5%);
+  --clr-text-t100: rgb(from var(--clr-text) r g b / 10%);
+  --clr-text-t200: rgb(from var(--clr-text) r g b / 20%);
+  --clr-text-t300: rgb(from var(--clr-text) r g b / 30%);
+  --clr-text-t400: rgb(from var(--clr-text) r g b / 40%);
+  --clr-text-t500: rgb(from var(--clr-text) r g b / 50%);
+  --clr-text-t600: rgb(from var(--clr-text) r g b / 60%);
+  --clr-text-t700: rgb(from var(--clr-text) r g b / 70%);
+  --clr-text-t800: rgb(from var(--clr-text) r g b / 80%);
+  --clr-text-t900: rgb(from var(--clr-text) r g b / 90%);
+}
+
+body {
+  height: 100svh;
+  
+  display: grid;
+  place-items: center;
+  
+  font-family: "Manrope", sans-serif;
+  
+  background: var(--clr-bg);
+  color: var(--clr-text);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.editor {
+  .node {
+    background-color: var(--clr-secondary);
+    padding: .3em;
+    border-radius: var(--corner-rad);
+
+    outline: solid 1px var(--clr-text-t200);
+  }
+}
