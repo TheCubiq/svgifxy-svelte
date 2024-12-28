@@ -1,27 +1,3 @@
-<!-- 
-<div class="node">
-  <Handle type="target" position={Position.Top} />
-  <div class="content">
-    <h3>Preview</h3>
-    <div class="preview">
-      <svg width="100" height="100">
-        <defs>
-          <filter id="preview-filter">
-            {@html data.filter}
-          </filter>
-        </defs>
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          fill="red"
-          filter="url(#preview-filter)"
-        />
-      </svg>
-    </div>
-  </div>
-</div> -->
-
 <script lang="ts">
 	import {
 		Handle,
@@ -31,22 +7,23 @@
 		type NodeProps
 	} from '@xyflow/svelte';
 
-	type $$Props = NodeProps;
-
-  interface Props {
-    id: $$Props['id'];
-  }
-
-  let { id }: Props = $props();
+  type $$Props = NodeProps;
+ 
+  export let id: $$Props['id'];
 
 	const connections = useHandleConnections({
 		nodeId: id,
 		type: 'target'
 	});
-
-	let nodesData = $derived(useNodesData(
-    $connections.map((connection) => connection.source)
+ 
+  $: nodesData = useNodesData($connections.map(
+    (connection) => {
+      console.log(connection);
+      return connection.source
+    }
   ));
+
+  $: console.log($nodesData);
 </script>
 
 <div class="node">
@@ -57,7 +34,7 @@
 		<div>no connected nodes</div>
 	{:else}
 		{#each $nodesData as nodeData}
-    {@const color = nodeData.data.color}
+    {@const color = nodeData.data.floodColor}
 			<div class="color" style="background: {color};">
         {color}
       </div>
