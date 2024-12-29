@@ -9,7 +9,7 @@
 
   import type { Node } from '@xyflow/svelte';
 	import BlendNode from './nodes/BlendNode.svelte';
-	import { transformFilter } from './utils/nodeUtils';
+	import { transformFilter } from '../utils/nodeUtils';
 
 
   const demoFilter = `
@@ -17,40 +17,66 @@
       <title>Grayscale</title>
       <feFlood result="flood-0" flood-color="#3a000e"></feFlood>
       <feFlood result="flood-1" flood-color="rgb(0, 3, 255)"></feFlood>
+      <feFlood result="flood-2" flood-color="#ff88ff"></feFlood>
       <feBlend result="blend-0" in="flood-0" in2="flood-1" mode="screen"></feBlend>
+      <feBlend result="blend-1" in="flood-0" in2="flood-1" mode="normal"></feBlend>
     </filter>
     `;
   const objFilterRaw = xml2js(demoFilter, { compact: true });
   
 
   const additionalNodes = [
-    // { id: 'sourceGraphic', type: 'sourceGraphic', position: { x: 0, y: 0 }, data: { color: '#ff0000' } },
-    // { id: 'flood', type: 'feFlood', position: { x: 0, y: 0 }, data: { floodColor: '#ff0000' } },
-    // { id: 'blend', type: 'feBlend', position: { x: 0, y: 0 }, data: { color: '#ff0000' } },
-    { id: 'preview', type: 'preview', position: { x: 0, y: 0 }}
+    { id: 'preview', type: 'preview', position: { x: 0, y: 0 }},
+    { id: 'preview2', type: 'preview', position: { x: 0, y: 0 }},
+    { id: 'blur', type: 'feGaussianBlur', position: { x: 0, y: 0 }},
   ];
 
   const nodes = writable(
-    [...transformFilter(objFilterRaw as FilterInput), ...additionalNodes]
+    [
+      ...transformFilter(objFilterRaw as FilterInput), 
+      ...additionalNodes
+    ]
   );
   
   
   const initialEdges = [
-    { id: 'e1', source: 'flood-0', target: 'preview' }
+    {
+        "source": "blend-0",
+        "target": "preview",
+        "id": "e1",
+    },
+    {
+        "source": "flood-1",
+        "target": "blend-0",
+        "targetHandle": "in2",
+        "id": "e2",
+    },
+    {
+        "source": "flood-0",
+        "target": "blend-0",
+        "targetHandle": "in",
+        "id": "e3"
+    }
   ];
   const edges = writable(initialEdges);
 
   const nodeTypes: NodeTypes = {
     feFlood: FloodNode,
     feBlend: BlendNode,
+    feGaussianBlur: GaussianBlurNode,
     preview: PreviewNode
   };
+
+  // $: edges.subscribe((value) => {
+  //   console.log("edgeupdate", {value});
+  // });
+
 </script>
 
 <div class="editor">
   <SvelteFlow
-    {nodes}
-    {edges}
+  {nodes}
+  {edges}
     {nodeTypes}
     fitView
     proOptions={{ hideAttribution: true }}

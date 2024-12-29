@@ -1,29 +1,23 @@
 <script lang="ts">
+	import { convertToSvgFilter, createFilter, findAllConnections } from '$lib/utils/nodeUtils';
+	import { toKebabCase } from '$lib/utils/commonUtils';
 	import {
 		Handle,
 		Position,
-		useHandleConnections,
+		useEdges,
 		useNodesData,
 		type NodeProps
 	} from '@xyflow/svelte';
 
-  type $$Props = NodeProps;
- 
-  export let id: $$Props['id'];
+	type $$Props = NodeProps;
 
-	const connections = useHandleConnections({
-		nodeId: id,
-		type: 'target'
-	});
- 
-  $: nodesData = useNodesData($connections.map(
-    (connection) => {
-      console.log(connection);
-      return connection.source
-    }
-  ));
+	export let id: $$Props['id'];
 
-  $: console.log($nodesData);
+	const allConnections = useEdges();
+
+	$: nodesData = useNodesData(findAllConnections(id, $allConnections));
+
+	$: cssFilter = createFilter(id, convertToSvgFilter(id, $nodesData), true)
 </script>
 
 <div class="node">
@@ -33,31 +27,29 @@
 	{#if $nodesData.length === 0}
 		<div>no connected nodes</div>
 	{:else}
-		{#each $nodesData as nodeData}
-    {@const color = nodeData.data.floodColor}
-			<div class="color" style="background: {color};">
-        {color}
-      </div>
-		{/each}
+    <div
+      class="color"
+      style:--f={cssFilter}
+    ></div>
 	{/if}
 </div>
 
-
 <style>
-  .color {
-    border-radius: .3em;
-    padding: .15em;
-    outline: solid 1px var(--clr-text-t200);
-  }
-  /* .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-  .preview {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-  } */
+	.color {
+		border-radius: 0.3em;
+		padding: 0.15em;
+		outline: solid 1px var(--clr-text-t200);
+		aspect-ratio: 1;
+		background-image: url(https://media1.tenor.com/m/BCAxaLlW-soAAAAd/smile-cat.gif);
+		background-size: cover;
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      backdrop-filter: var(--f);
+    }
+	}
 </style>
