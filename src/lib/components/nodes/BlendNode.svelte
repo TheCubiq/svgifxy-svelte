@@ -2,6 +2,7 @@
 	import { Handle, Position, useHandleConnections, useNodesData, useSvelteFlow, type Connection, type NodeProps } from '@xyflow/svelte';
 	import { readable } from 'svelte/store';
 	import Select from '../Select.svelte';
+	import { getSource } from '$lib/utils/nodeUtils';
 	type $$Props = NodeProps;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
@@ -25,11 +26,11 @@
       type: 'target'
   })
 
-
   $: {
+    console.log($c_in1)
     updateNodeData(id, { 
-      in: $c_in1[0]?.source, 
-      in2: $c_in2[0]?.source 
+      in: getSource($c_in1), 
+      in2: getSource($c_in2) 
     });
   }
 
@@ -37,7 +38,7 @@
 </script>
 
 <div class="node">
-  <div class="input">
+  <div class="handle-wrapper">
       <Handle 
         class="handle" 
         type="target" 
@@ -61,21 +62,3 @@
 	</div>
 	<Handle type="source" position={Position.Bottom} />
 </div>
-
-<style>
-  .input {
-    display: flex;
-    justify-content: space-around;
-    position: absolute;
-    inset: 0;
-    bottom: unset;
-  }
-
-  :global(.input .svelte-flow__handle-top) {
-    position: relative;
-    top: 0;;
-    left: 0;
-    transform: translate(0%, -50%);
-  }
-
-</style>

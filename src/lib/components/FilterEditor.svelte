@@ -31,6 +31,7 @@
     { id: 'preview2', type: 'preview', position: { x: 0, y: 0 }},
     { id: 'blur', type: 'feGaussianBlur', position: { x: 0, y: 0 }},
     { id: 'noiss', type: 'feTurbulence', position: { x: 0, y: 0 }},
+    { id: 'sourc', type: 'sourceGraphic', position: { x: 0, y: 0 }},
   ];
 
   const nodes = writable(
@@ -67,7 +68,8 @@
     feBlend: BlendNode,
     feGaussianBlur: GaussianBlurNode,
     feTurbulence: TurbulenceNode,
-    preview: PreviewNode
+    preview: PreviewNode,
+    sourceGraphic: SourceGraphicNode
   };
 
   // $: edges.subscribe((value) => {

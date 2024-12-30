@@ -1,4 +1,4 @@
-import type { Edge, Node } from '@xyflow/svelte';
+import type { Connection, Edge, Node } from '@xyflow/svelte';
 import { getRandomPosition, toCamelCase, toKebabCase } from './commonUtils';
 import { js2xml } from 'xml-js';
 
@@ -40,16 +40,7 @@ export const transformFilter = (objFilterRaw: FilterInput): Node[] => {
       }
     }
   });
-
-  // // convert data of each node to camelCase
-
-  // const nodeConverted = nodes.map(node => ({
-  //   ...node,
-  //   data: transformAttributes(node.data)
-  // }));
-
-  // console.log(nodeConverted);
-
+  
   return nodes;
 };
 
@@ -71,6 +62,8 @@ export const findAllConnections = (targetId: string, connections: Edge[]) => {
   
   // Start the recursive search
   findSourceNodes(targetId);
+
+  console.log(connectedIds);
   
   // Convert Set to Array and return
   return Array.from(connectedIds).reverse();
@@ -142,3 +135,8 @@ export const convertToSvgFilter = (id: string, nodesData: Node[]) => {
 
   return js2xml(filterOutput, { spaces: 2 });
 };
+
+export const getSource = (connection: Connection[]) => {
+  if (connection.length === 0) return null;
+  return connection[0].sourceHandle || connection[0].source;
+}

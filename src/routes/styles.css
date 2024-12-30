@@ -179,5 +179,47 @@ body {
       flex-direction: column;
       gap: 0.5em;
     }
+
+
+    .handle-wrapper {
+      display: flex;
+      justify-content: space-around;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+
+      [class *="svelte-flow__handle"] {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        pointer-events: all;
+      }
+
+      [class *="svelte-flow__handle"]:nth-child(1) {
+        :has(> &[data-handlepos="top"]) {
+          bottom: unset;
+          transform: translateY(-50%);
+        }
+        :has(> &[data-handlepos="bottom"]) {
+          bottom: unset;
+          transform: translateY(50%);
+        }
+        :has(> &[data-handlepos="right"]) {
+          left: unset;
+          transform: translateX(50%);
+          flex-direction: column;
+        }
+        :has(> &[data-handlepos="left"]) {
+          right: unset;
+          transform: translateY(-50%);
+          flex-direction: column;
+        }
+      }
+
+      
+    }
+
+
   }
 }
