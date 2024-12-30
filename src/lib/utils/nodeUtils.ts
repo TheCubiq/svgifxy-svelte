@@ -73,7 +73,7 @@ export const findAllConnections = (targetId: string, connections: Edge[]) => {
   findSourceNodes(targetId);
   
   // Convert Set to Array and return
-  return Array.from(connectedIds);
+  return Array.from(connectedIds).reverse();
 }
 
 const cssReadyEncode = (svg: string) => {

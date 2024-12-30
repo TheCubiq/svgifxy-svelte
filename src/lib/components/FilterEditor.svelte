@@ -5,7 +5,8 @@
   import FloodNode from './nodes/FloodNode.svelte';
   import SourceGraphicNode from './nodes/SourceGraphicNode.svelte';
   import PreviewNode from './nodes/PreviewNode.svelte';
-	import { xml2js, type ElementCompact } from 'xml-js';
+  import TurbulenceNode from './nodes/TurbulenceNode.svelte';
+  import { xml2js, type ElementCompact } from 'xml-js';
 
   import type { Node } from '@xyflow/svelte';
 	import BlendNode from './nodes/BlendNode.svelte';
@@ -29,6 +30,7 @@
     { id: 'preview', type: 'preview', position: { x: 0, y: 0 }},
     { id: 'preview2', type: 'preview', position: { x: 0, y: 0 }},
     { id: 'blur', type: 'feGaussianBlur', position: { x: 0, y: 0 }},
+    { id: 'noiss', type: 'feTurbulence', position: { x: 0, y: 0 }},
   ];
 
   const nodes = writable(
@@ -64,6 +66,7 @@
     feFlood: FloodNode,
     feBlend: BlendNode,
     feGaussianBlur: GaussianBlurNode,
+    feTurbulence: TurbulenceNode,
     preview: PreviewNode
   };
 
@@ -82,7 +85,7 @@
     proOptions={{ hideAttribution: true }}
     maxZoom={5}
   >
-    <Background bgColor="var(--clr-bg)"/>
+    <Background bgColor="transparent"/>
   </SvelteFlow>
 </div>
 

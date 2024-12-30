@@ -12,6 +12,14 @@
   color-scheme: light dark;
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    --clr-bg: #FEFEFE;
+    --clr-text: #17191C;
+    --clr-secondary: #dfe2ed;
+  }
+};
+
 :root {
 
   /* --base-50dn: #ffffff;
@@ -103,6 +111,16 @@ body {
   
   background: var(--clr-bg);
   color: var(--clr-text);
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-size: 220px;
+    background-repeat: repeat;
+    background-image: url(/noise-light.png);
+    opacity: 0.3;
+  }
 }
 
 * {
@@ -113,11 +131,53 @@ body {
 
 
 .editor {
-  .node {
-    background-color: var(--clr-secondary);
-    padding: .3em;
-    border-radius: var(--corner-rad);
+  > .svelte-flow[role="application"] {
+    background: transparent;
+  }
 
+  select, input {
+    border: none;
+    outline: solid 1px #fff2;
+    border-radius: 0.2em;
+    
+    background-color: var(--clr-bg-t800);
+
+    padding: 0.3em;
+
+    &:not(:focus) {
+      background: transparent;
+    }
+
+}
+
+  .node {
+    border-radius: var(--corner-rad);
     outline: solid 1px var(--clr-text-t200);
+
+    padding: .5em;
+
+    background-color: var(--clr-secondary-t800);
+    --_ftr: brightness(0.9) saturate(2) blur(20px);
+    -webkit-backdrop-filter: var(--_ftr);
+    backdrop-filter: var(--_ftr);
+
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url(/noise-light.png);
+      background-size: 6em;
+      mix-blend-mode: overlay;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    > .content { 
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
   }
 }
