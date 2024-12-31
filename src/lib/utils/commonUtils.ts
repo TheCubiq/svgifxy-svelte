@@ -24,7 +24,15 @@ export const toKebabCase = (str: string): string => {
 	return str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase())
 };
 
-export const getMousePos = (e: MouseEvent | TouchEvent) => {
+export type GestureEvent = MouseEvent | TouchEvent;
+
+export const getMousePos = (e: GestureEvent) => {
 	let pos = (e as TouchEvent).touches ? (e as TouchEvent).touches[0] : (e as MouseEvent);
 	return { x: pos.clientX, y: pos.clientY };
+};
+
+// https://stackoverflow.com/a/17323608
+// % in js is not modulo, it's remainder
+export const mod = (n, m) => {
+  return ((n % m) + m) % m;
 };

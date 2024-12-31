@@ -37,6 +37,15 @@
 	{#if $nodesData.length === 0}
 		<div>Nothing to preview</div>
 	{:else}
-		<SvgPreview {id} nodeData={$nodesData} resizable />
+		<div class="wrap">
+			<SvgPreview {id} nodeData={$nodesData} resizable bg />
+		</div>
 	{/if}
 </div>
+
+<style>
+	.wrap {
+		padding: 0.5em;
+		min-width: 5rem;
+	}
+</style>
