@@ -23,3 +23,8 @@ export const toCamelCase = (str: string): string => {
 export const toKebabCase = (str: string): string => {
 	return str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase())
 };
+
+export const getMousePos = (e: MouseEvent | TouchEvent) => {
+	let pos = (e as TouchEvent).touches ? (e as TouchEvent).touches[0] : (e as MouseEvent);
+	return { x: pos.clientX, y: pos.clientY };
+};

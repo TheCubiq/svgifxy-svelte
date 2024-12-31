@@ -8,7 +8,7 @@
 
   const { updateNodeData } = useSvelteFlow();
 
-  const { stdDeviation } = data;
+  const { dx, dy } = data;
 
   const c_in1 = useHandleConnections({
       nodeId: id,
@@ -26,12 +26,18 @@
     isConnectable={limitedConnect($c_in1)}
     position={Position.Top} />
   <div class="content">
-		<h3>GaussianBlur</h3>
+		<h3>Offset</h3>
     <input 
       type="number" 
-      placeholder="stdDeviation" 
-      value={stdDeviation}
-      on:input={(evt) => updateNodeData(id, { stdDeviation: evt.currentTarget.value })}
+      placeholder="dx" 
+      value={dx}
+      on:input={(evt) => updateNodeData(id, { dx: evt.currentTarget.value })}
+    />
+    <input 
+      type="number" 
+      placeholder="dy" 
+      value={dy}
+      on:input={(evt) => updateNodeData(id, { dy: evt.currentTarget.value })}
     />
   </div>
   <Handle type="source" position={Position.Bottom} />

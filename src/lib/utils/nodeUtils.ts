@@ -109,18 +109,14 @@ export const createFilter = (id: string, filter: string, cssReady = false) => {
   return boilerplate;
 };
 
-export const convertToSvgFilter = (id: string, nodesData: Node[]) => {
+export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
   const filterOutput = { elements: [] };
 
-  nodesData.forEach((node) => {
-    // const kebabedData = Object.keys(node.data).reduce(
-    //   (acc: { [key: string]: any }, key: string) => {
-    //     acc[toKebabCase(key)] = node.data[key];
-    //     return acc;
-    //   },
-    //   {}
-    // );
+  if (!Array.isArray(nodesData)) {
+    nodesData = [nodesData];
+  }
 
+  nodesData.forEach((node) => {
     let element = {
       type: 'element',
       name: node.type,
@@ -139,4 +135,8 @@ export const convertToSvgFilter = (id: string, nodesData: Node[]) => {
 export const getSource = (connection: Connection[]) => {
   if (connection.length === 0) return null;
   return connection[0].sourceHandle || connection[0].source;
+}
+
+export const limitedConnect = (connection: Connection[], max=1) => {
+  return connection.length < max;
 }

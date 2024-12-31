@@ -2,17 +2,13 @@
 	import { Handle, Position, useHandleConnections, useNodesData, useSvelteFlow, type Connection, type NodeProps } from '@xyflow/svelte';
 	import { readable } from 'svelte/store';
 	import Select from '../Select.svelte';
-	import { getSource } from '$lib/utils/nodeUtils';
+	import { limitedConnect, getSource } from '$lib/utils/nodeUtils';
 	type $$Props = NodeProps;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
   
 	const { updateNodeData } = useSvelteFlow();
 	const { mode } = data;
-
-  const canConnect = (connection: Connection[]) => {
-    return connection.length === 0;
-  }
 
   const c_in1 = useHandleConnections({
       nodeId: id,
@@ -43,13 +39,13 @@
         class="handle" 
         type="target" 
         id="in" 
-        isConnectable={canConnect($c_in1)}
+        isConnectable={limitedConnect($c_in1)}
         position={Position.Top} />
       <Handle 
         class="handle" 
         type="target" 
         id="in2"  
-        isConnectable={canConnect($c_in2)}
+        isConnectable={limitedConnect($c_in2)}
         position={Position.Top} />
   </div>
 	<div class="content">
