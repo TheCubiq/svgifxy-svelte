@@ -4,9 +4,11 @@
 	import { findAllConnections } from '$lib/utils/nodeUtils';
 	import SvgPreview from '../SvgPreview.svelte';
 	import { spring, tweened } from 'svelte/motion';
-	import { getMousePos, mod, type GestureEvent } from '$lib/utils/commonUtils';
+	import { getMousePos, lerp, mod, type GestureEvent } from '$lib/utils/commonUtils';
 	import { Mouse } from 'lucide-svelte';
 	import { cubicOut } from 'svelte/easing';
+	import { onDestroy, onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	type $$Props = NodeProps;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
@@ -19,39 +21,32 @@
 
 	$: console.log($nodesData);
 
-	let dragging = false;
+	let isDragging = false;
 
 	let startPos = { x: 0, y: 0 };
 
+	
+	
 	interface DOMRectDimensions {
 		x: number;
 		y: number;
 		width: number;
 		height: number;
 	}
-
+	
 	let size: DOMRectDimensions = { x: 0, y: 0, width: 0, height: 0};
-
+	
 	$: console.log(size)
-
+	
 	let dragArea: HTMLDivElement;
-
-	// todo: slip instead of spring:
-	// https://codepen.io/JunreyCen/pen/arRYem
-
-	const dotPos = spring(
-		{
-      x: 50,
-      y: 50,
-    },
-    {
-      stiffness: 0.02,
-      damping: 0.055,
-    }
-  );
-
+	
+	const dotPos = writable({ x: 50, y: 50 });
+	let velocity = { x: 0, y: 0 };
+	let lastCoords = { x: 0, y: 0 };
+	let animationFrame: number = 0;
+	
 	const handleDrag = (evt: GestureEvent) => {
-		if (!dragging) return;
+		if (!isDragging) return;
 		evt.preventDefault();
 		// console.log(evt.clientX, evt.clientY);
 		let { x, y } = getMousePos(evt);
@@ -59,31 +54,85 @@
 		x = (x - startPos.x) / size.width * 100
 		y = (y - startPos.y) / size.height * 100
 
-		// x = Math.min(100, Math.max(0, x));
-		// y = Math.min(100, Math.max(0, y));
+		let delta = {
+      x: x - lastCoords.x,
+      y: y - lastCoords.y
+    };
 
-		dotPos.set({x,y});
+		delta = {
+			x: Math.abs(delta.x) < .5 ? 0 : delta.x,
+			y: Math.abs(delta.y) < .5 ? 0 : delta.y
+		}
+    
+    velocity = delta;
+
+		lastCoords = { x, y };
+
+		dotPos.set(lastCoords);
 	}
 
 	const handleMouseDown = (evt: GestureEvent) => {
 		size = dragArea.getBoundingClientRect();
 		const pos = getMousePos(evt);
-		dragging = true;
+		isDragging = true;
 
 		startPos = {
 			x: pos.x - $dotPos.x * size.width / 100,
 			y: pos.y - $dotPos.y * size.height / 100,
 		}
 
+		lastCoords = startPos;
+
+		cancelAnimationFrame(animationFrame);
+
 	}
 
 	const handleMouseUp = (evt: GestureEvent) => {
-		dragging = false;
-		// dotPos.set({ x: 50, y: 50 });
+		isDragging = false;
+		applyMomentum();
 	}
 
 
-	const cssPerc = (val: number) => `${val}%`;
+	const cssPerc = (val: number) => `${
+		val
+		// mod(val, 100)
+	}%`;
+
+
+	const applyMomentum = () => {
+    const friction = 0.95;
+    
+    function animate() {
+      if (Math.abs(velocity.x) > 0.05 || Math.abs(velocity.y) > 0.05) {
+        velocity = {
+          x: velocity.x * friction,
+          y: velocity.y * friction
+        };
+        
+        dotPos.update(pos => ({
+          x: pos.x + velocity.x,
+          y: pos.y + velocity.y
+        }));        
+        animationFrame = requestAnimationFrame(animate);
+      }
+    }
+		animationFrame = requestAnimationFrame(animate);
+	}
+
+	onDestroy(() => {
+		if (animationFrame)
+			cancelAnimationFrame(animationFrame);
+  });
+
+	dotPos.subscribe((pos) => {
+		pos = {
+			// x: pos.x / 1000,
+			x: lerp(.1, 0, pos.x / 100),
+			// y: pos.y / 1000
+			y: lerp(.1, 0, pos.y / 100)
+		}
+		updateNodeData(id, { baseFrequency: `${pos.x} ${pos.y}` });
+	});
 
 </script>
 
@@ -134,14 +183,14 @@
 			bind:this={dragArea}
 			on:mousedown|preventDefault={handleMouseDown}
 			on:touchstart|preventDefault={handleMouseDown}
-			style:--_x={cssPerc(mod($dotPos.x, 100))}
-			style:--_y={cssPerc(mod($dotPos.y, 100))}
+			style:--_x={cssPerc($dotPos.x)}
+			style:--_y={cssPerc($dotPos.y)}
 			>
 			<!-- style:--_x={cssPerc($dotPos.x / size.width * 100)} -->
 			<!-- style:--_y={cssPerc($dotPos.y / size.height * 100)} -->
-			<div 
+			<!-- <div 
 				class="dot"
-			></div>
+			></div> -->
 			<SvgPreview {id} nodeData={$nodesData} />
 		</div>
 
@@ -160,8 +209,11 @@
 
 		/* grid using linear gradient */
 
-		background-image: linear-gradient(90deg, var(--clr-text-t300) 1px, transparent 1px),
-			linear-gradient(0deg, var(--clr-text-t300) 1px, transparent 1px);
+		--_clr-grid: var(--clr-text-t100);
+
+		background-image: 
+			linear-gradient(90deg, var(--_clr-grid) 1px, transparent 1px),
+			linear-gradient(0deg, var(--_clr-grid) 1px, transparent 1px);
 
 		background-size: 20px 20px;
 

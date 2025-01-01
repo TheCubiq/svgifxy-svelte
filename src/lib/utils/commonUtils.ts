@@ -36,3 +36,7 @@ export const getMousePos = (e: GestureEvent) => {
 export const mod = (n, m) => {
   return ((n % m) + m) % m;
 };
+
+export const lerp = (start: number, end: number, t: number) => {
+	return start * (1 - t) + end * t;
+}
