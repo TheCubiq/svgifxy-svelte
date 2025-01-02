@@ -3,14 +3,34 @@ import { getRandomPosition, toCamelCase, toKebabCase } from './commonUtils';
 import { js2xml } from 'xml-js';
 
 // Helper function to create node object
-const createNode = (type: string, attributes: FilterAttributes): Node => {
-  const data = { ...attributes };
-  delete data.result; // Remove result from data as it becomes id
+const createNode = (type: string, attributes: FilterAttributes, idx = 0): Node => {
+  // const data = { ...attributes._attributes };
+
+  const {_attributes: data, ...nested} = attributes;
+
+  // delete data.result; // Remove result from data as it becomes id
+
+  const typeFormatted = type
+    .toLowerCase()    
+    .replace('fe', '')
+  ;
+
+  let heya = {}
+  if (Object.keys(nested).length > 0) {
+    heya = {_nested: nested}
+  }
+
+  const customResult = `${typeFormatted}${idx+1}`
 
   return {
-    id: attributes.result || '',
-    type,
-    data,
+    id: data.result || customResult,
+    type: "dynamicType",
+    data: {
+      filterType: type,
+      ...data,
+      result: data.result || customResult,
+      ...heya
+    },
     position: getRandomPosition()
   };
 };
@@ -24,20 +44,39 @@ const transformAttributes = (attributes: FilterAttributes): Record<string, any> 
   return transformed;
 };
 
-export const transformFilter = (objFilterRaw: FilterInput): Node[] => {
+const getFilterNodes = (filter: Record<string, any>): FilterNode => {
+  // todo: get rid of filter: any
+  
+  // if wrapped in svg
+  if (filter.svg?.filter) {
+    return filter.svg.filter;
+  }
+
+  // if wrapped in filter
+  if (filter.filter) {
+    return filter.filter;
+  }
+
+  // if passed directly
+  return filter;
+}
+
+export const transformFilter = (objFilterRaw: FilterInputRaw): Node[] => {
   const nodes: Node[] = [];
-  const filter = objFilterRaw.filter;
+
+  const filter = getFilterNodes(objFilterRaw);
+
+  // console.log(objFilterRaw)
 
   // Process all filter elements
   Object.entries(filter).forEach(([key, value]) => {
-    if (key.startsWith('fe')) {
-      if (Array.isArray(value)) {
-        value.forEach(item => {
-          nodes.push(createNode(key, item._attributes));
-        });
-      } else if (value && '_attributes' in value) {
-        nodes.push(createNode(key, value._attributes));
-      }
+    if (key.startsWith('_comment')) return;
+    if (Array.isArray(value)) {
+      value.forEach((item, idx) => {
+        nodes.push(createNode(key, item, idx));
+      });
+    } else if (value && '_attributes' in value) {
+      nodes.push(createNode(key, value));
     }
   });
   
@@ -110,7 +149,7 @@ export const createFilter = (id: string, filter: string, cssReady = false) => {
 };
 
 export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
-  const filterOutput = { elements: [] };
+  const filterOutput: any[] = [];
 
   if (!Array.isArray(nodesData)) {
     nodesData = [nodesData];
@@ -126,10 +165,10 @@ export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
       }
     };
 
-    filterOutput.elements.push(element);
+    filterOutput.push(element);
   });
 
-  return js2xml(filterOutput, { spaces: 2 });
+  return js2xml({elements: filterOutput}, { spaces: 2 });
 };
 
 export const getSource = (connection: Connection[]) => {

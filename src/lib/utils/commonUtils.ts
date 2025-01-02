@@ -1,7 +1,7 @@
 // Helper function to generate random position
 export const getRandomPosition = (): Position => ({
-	x: Math.floor(Math.random() * 400),
-	y: Math.floor(Math.random() * 400)
+	x: Math.floor(Math.random() * 1000),
+	y: Math.floor(Math.random() * 1000)
 });
 
 export const rgb2hex = (c: string) => {
@@ -33,7 +33,7 @@ export const getMousePos = (e: GestureEvent) => {
 
 // https://stackoverflow.com/a/17323608
 // % in js is not modulo, it's remainder
-export const mod = (n, m) => {
+export const mod = (n: number, m: number) => {
   return ((n % m) + m) % m;
 };
 

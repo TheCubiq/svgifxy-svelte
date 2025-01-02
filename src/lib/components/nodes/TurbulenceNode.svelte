@@ -19,8 +19,6 @@
 
 	$: nodesData = useNodesData(id);
 
-	$: console.log($nodesData);
-
 	let isDragging = false;
 
 	let startPos = { x: 0, y: 0 };
@@ -35,9 +33,7 @@
 	}
 	
 	let size: DOMRectDimensions = { x: 0, y: 0, width: 0, height: 0};
-	
-	$: console.log(size)
-	
+		
 	let dragArea: HTMLDivElement;
 	
 	const dotPos = writable({ x: 50, y: 50 });
@@ -48,7 +44,6 @@
 	const handleDrag = (evt: GestureEvent) => {
 		if (!isDragging) return;
 		evt.preventDefault();
-		// console.log(evt.clientX, evt.clientY);
 		let { x, y } = getMousePos(evt);
 
 		x = (x - startPos.x) / size.width * 100

@@ -1,0 +1,91 @@
+<!-- <svg xmlns="http://www.w3.org/2000/svg"> -->
+
+  <!-- <filter id="everything" x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox"
+    primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB"> -->
+
+    <!-- feBlend -->
+    <feBlend in="SourceGraphic" in2="SourceAlpha" mode="normal" result="blend" x="0" y="0" width="100%" height="100%" />
+
+    <!-- feColorMatrix -->
+    <feColorMatrix in="blend" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="colormatrix"
+      x="0" y="0" width="100%" height="100%" />
+
+    <!-- feComposite -->
+    <feComposite in="componentTransfer" in2="SourceAlpha" operator="over" k1="0" k2="1" k3="1" k4="0" result="composite"
+      x="0" y="0" width="100%" height="100%" />
+
+    <!-- feConvolveMatrix -->
+    <feConvolveMatrix in="composite" order="3" kernelMatrix="1 1 1  1 1 1  1 1 1" divisor="9" bias="0" targetX="1"
+      targetY="1" edgeMode="duplicate" kernelUnitLength="1 1" preserveAlpha="true" result="convolve" />
+
+    <!-- feDisplacementMap -->
+    <feDisplacementMap in="diffuse" in2="SourceAlpha" scale="10" xChannelSelector="R" yChannelSelector="G"
+      result="displace" />
+
+    <!-- feFlood -->
+    <feFlood flood-color="rgb(128,128,128)" flood-opacity="1" x="0" y="0" width="100%" height="100%" result="flood" />
+
+    <!-- feGaussianBlur -->
+    <feGaussianBlur in="displace" stdDeviation="2 2" edgeMode="duplicate" result="blur" />
+
+    <!-- feImage -->
+    <feImage href="data:image/png;base64,..." preserveAspectRatio="xMidYMid meet" result="image" x="0" y="0"
+      width="100%" height="100%" />
+
+    <!-- feMorphology -->
+    <feMorphology in="merge" operator="dilate" radius="2 2" result="morph" />
+
+    <!-- feOffset -->
+    <feOffset in="morph" dx="5" dy="5" result="offset" />
+
+
+    <!-- feTile -->
+    <feTile in="specular" result="tile" x="0" y="0" width="100%" height="100%" />
+
+    <!-- feTurbulence -->
+    <feTurbulence type="turbulence" baseFrequency="0.05 0.05" numOctaves="2" seed="0" stitchTiles="stitch"
+      result="turbulence" />
+
+    <!-- feComposite (final combination) -->
+    <feComposite in="tile" in2="turbulence" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+
+    <!-- feSpecularLighting -->
+    <!-- 
+    <feSpecularLighting in="offset" surfaceScale="1" specularConstant="1" specularExponent="1" kernelUnitLength="1 1"
+      result="specular">
+      <feDistantLight azimuth="45" elevation="45" />
+    </feSpecularLighting> 
+    -->
+
+    <!-- feDiffuseLighting -->
+    
+    <feDiffuseLighting in="convolve" surfaceScale="1" diffuseConstant="1" kernelUnitLength="1 1" result="diffuse">
+      <feDistantLight azimuth="45" elevation="45" />
+      <fePointLight x="50" y="50" z="50" />
+      <feSpotLight x="50" y="50" z="50" pointsAtX="100" pointsAtY="100" pointsAtZ="0" specularExponent="1"
+        limitingConeAngle="45" />
+    </feDiffuseLighting> 
+   
+
+    <!-- feMerge -->
+    
+    <feMerge result="merge">
+      <feMergeNode in="blur" />
+      <feMergeNode in="flood" />
+      <feMergeNode in="image" />
+    </feMerge> 
+   
+
+    <!-- feComponentTransfer -->
+    
+    <feComponentTransfer in="colormatrix" result="componentTransfer">
+      <feFuncR type="linear" slope="1" intercept="0" amplitude="1" exponent="1" offset="0" />
+      <feFuncG type="table" tableValues="0 0.5 1" />
+      <feFuncB type="discrete" tableValues="0 0.5 1" />
+      <feFuncA type="gamma" amplitude="1" exponent="1" offset="0" />
+    </feComponentTransfer> 
+   
+
+  <!-- </filter> -->
+
+<!-- </svg> -->
