@@ -33,10 +33,15 @@ export const getMousePos = (e: GestureEvent) => {
 
 // https://stackoverflow.com/a/17323608
 // % in js is not modulo, it's remainder
-export const mod = (n, m) => {
+export const mod = (n: number, m:number) => {
   return ((n % m) + m) % m;
 };
 
 export const lerp = (start: number, end: number, t: number) => {
 	return start * (1 - t) + end * t;
+}
+
+export const roundTo = (num: number, precision: number = 5) => {
+	const factor = Math.pow(10, precision);
+	return Math.round(num * factor) / factor;
 }
