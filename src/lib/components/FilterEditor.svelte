@@ -11,6 +11,7 @@
   import type { Node } from '@xyflow/svelte';
 	import BlendNode from './nodes/BlendNode.svelte';
 	import { transformFilter } from '../utils/nodeUtils';
+	import DisplacementNode from './nodes/DisplacementNode.svelte';
 
 
   const demoFilter = `
@@ -31,6 +32,7 @@
     { id: 'preview2', type: 'preview', position: { x: 0, y: 0 }},
     { id: 'blur', type: 'feGaussianBlur', position: { x: 0, y: 0 }},
     { id: 'noiss', type: 'feTurbulence', position: { x: 0, y: 0 }},
+    { id: 'displ', type: 'feDisplacementMap', position: { x: 0, y: 0 }},
     { id: 'sourc', type: 'sourceGraphic', position: { x: 0, y: 0 }},
   ];
 
@@ -67,14 +69,11 @@
     feFlood: FloodNode,
     feBlend: BlendNode,
     feGaussianBlur: GaussianBlurNode,
+    feDisplacementMap: DisplacementNode,
     feTurbulence: TurbulenceNode,
     preview: PreviewNode,
-    sourceGraphic: SourceGraphicNode
+    sourceGraphic: SourceGraphicNode,
   };
-
-  // $: edges.subscribe((value) => {
-  //   console.log("edgeupdate", {value});
-  // });
 
 </script>
 

@@ -5,7 +5,7 @@
 <main>
   <FilterEditor />
 
-  <span>heyaa</span>
+  <span>:3</span>
 </main>
 
 <style>
