@@ -8,7 +8,7 @@ export const rgb2hex = (c: string) => {
   return '#' + (c.match(/\d+/g)?.map((x) => (+x).toString(16).padStart(2, '0')).join('') || '')
 }
 
-export const anyToHex = (anyColor: string) => {
+export const anyToHex = (anyColor: string = '#000000') => {
 	if (anyColor.startsWith('#')) return anyColor;
 	// rgb(255, 0, 0) -> #ff0000
 	return rgb2hex(anyColor); 

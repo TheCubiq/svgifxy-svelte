@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Handle, Position, useHandleConnections, useNodesData, useSvelteFlow, type Connection, type NodeProps } from '@xyflow/svelte';
 	import { readable } from 'svelte/store';
-	import Select from '../Select.svelte';
+	import Select from './controllers/Select.svelte';
 	import { limitedConnect, getSource } from '$lib/utils/nodeUtils';
 	type $$Props = NodeProps;
 	export let id: $$Props['id'];

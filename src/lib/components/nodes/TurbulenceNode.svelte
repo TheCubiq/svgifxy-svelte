@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Handle, Position, useEdges, useNodesData, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
-	import Select from '../Select.svelte';
+	import Select from './controllers/Select.svelte';
 	import { findAllConnections } from '$lib/utils/nodeUtils';
-	import SvgPreview from '../SvgPreview.svelte';
+	import SvgPreview from './controllers/SvgPreview.svelte';
 	import { spring, tweened } from 'svelte/motion';
 	import { getMousePos, lerp, mod, roundTo, type GestureEvent } from '$lib/utils/commonUtils';
 	import { Mouse } from 'lucide-svelte';

@@ -14,7 +14,7 @@
 		useNodesData,
 		type NodeProps
 	} from '@xyflow/svelte';
-	import SvgPreview from '../SvgPreview.svelte';
+	import SvgPreview from './controllers/SvgPreview.svelte';
 
 	type $$Props = NodeProps;
 

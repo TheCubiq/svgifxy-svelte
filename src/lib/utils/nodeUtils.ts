@@ -63,7 +63,7 @@ export const findAllConnections = (targetId: string, connections: Edge[]) => {
   // Start the recursive search
   findSourceNodes(targetId);
 
-  console.log(connectedIds);
+  // console.log(connectedIds);
   
   // Convert Set to Array and return
   return Array.from(connectedIds).reverse();
