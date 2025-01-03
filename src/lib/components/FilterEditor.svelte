@@ -12,6 +12,7 @@
 	import BlendNode from './nodes/BlendNode.svelte';
 	import { transformFilter } from '../utils/nodeUtils';
 	import DisplacementNode from './nodes/DisplacementNode.svelte';
+	import ConvolveMatrix from './nodes/ConvolveMatrix.svelte';
 
 
   const demoFilter = `
@@ -31,9 +32,10 @@
     { id: 'preview', type: 'preview', position: { x: 0, y: 0 }},
     { id: 'preview2', type: 'preview', position: { x: 0, y: 0 }},
     { id: 'blur', type: 'feGaussianBlur', position: { x: 0, y: 0 }},
-    { id: 'noiss', type: 'feTurbulence', position: { x: 0, y: 0 }},
-    { id: 'displ', type: 'feDisplacementMap', position: { x: 0, y: 0 }},
+    // { id: 'noiss', type: 'feTurbulence', position: { x: 0, y: 0 }},
+    // { id: 'displ', type: 'feDisplacementMap', position: { x: 0, y: 0 }},
     { id: 'sourc', type: 'sourceGraphic', position: { x: 0, y: 0 }},
+    { id: 'conv', type: 'feConvolveMatrix', position: { x: 0, y: 0 }},
   ];
 
   const nodes = writable(
@@ -69,6 +71,7 @@
     feFlood: FloodNode,
     feBlend: BlendNode,
     feGaussianBlur: GaussianBlurNode,
+    feConvolveMatrix: ConvolveMatrix,
     feDisplacementMap: DisplacementNode,
     feTurbulence: TurbulenceNode,
     preview: PreviewNode,
