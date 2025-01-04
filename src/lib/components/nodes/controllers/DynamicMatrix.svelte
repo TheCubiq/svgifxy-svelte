@@ -14,17 +14,7 @@
     matrixArray[i] = Number(evt.currentTarget.value);
   }
 
-  const handleDynamicStep = (e, i) => {
-    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
-
-    e.preventDefault();
-
-    
-    const direction = e.key === 'ArrowUp' ? 'up' : 'down';
-    const input = e.target;
-    const value = input.value;
-    let caretPos = input.selectionStart;
-    
+  const handleDynamicStep = (value, caretPos, keyUp) => {
     // Handle the sign
     let sign = 1;
     let signOffset = 0;
@@ -33,7 +23,6 @@
       signOffset = 1;
     }
 
-    debugger;
       
     const numberString = value.startsWith('-') ? value.slice(1) : value;
     let caretPosInNumber = caretPos - signOffset;
@@ -45,11 +34,23 @@
     }
 
     // Calculate exponent based on caret position
-    let exponent;
+    let exponent = decimalPos - caretPosInNumber;
     if (caretPosInNumber <= decimalPos) {
-        exponent = decimalPos - caretPosInNumber - 1;
-    } else {
-        exponent = decimalPos - caretPosInNumber;
+        exponent -= 1;
+    }
+
+    const editingDigit = numberString[caretPosInNumber];
+
+    if (
+      caretPosInNumber == 0 
+      && editingDigit === '1' 
+      && numberString.length > 1
+      // up negative, down positive
+      && (keyUp == value.startsWith('-')) 
+    ) {
+      // special case for 1x, 1xx, etc.
+      exponent -= 1;
+      console.log(editingDigit, exponent);
     }
 
     const delta = Math.pow(10, exponent);
@@ -58,22 +59,37 @@
     let currentValue = parseFloat(value) || 0.0;
 
     // Calculate the new value
-    let newValue = currentValue + (direction === 'up' ? delta : -delta);
+    let newValue = currentValue + (keyUp ? delta : -delta);
 
     // Handle precision to avoid floating point issues
     const precision = Math.max(0, -exponent);
-    newValue = parseFloat(newValue.toFixed(precision));
-
-    // Update the input value
-    input.value = newValue.toString();
+    // const precision = 9;
+    const newValueString = newValue.toFixed(precision);
 
     // Adjust caret position if necessary
-    const newCaretPos = Math.max(0, caretPos + input.value.length - value.length);
-    input.setSelectionRange(newCaretPos, newCaretPos);
-    
-    handleOnInput(e, i);
+    const newCaretPos = Math.max(0, caretPos + newValueString.length - value.length);
 
+    return {value: newValueString, caret: newCaretPos}
   }
+
+  const handleKeyDown = (e: any, i: number) => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+
+    e.preventDefault();
+    const input = e.target;
+
+    const dyn = handleDynamicStep(
+      input.value, 
+      input.selectionStart,
+      e.key === 'ArrowUp'
+    );
+
+    console.log(dyn);
+
+    input.value = dyn.value;
+    input.setSelectionRange(dyn.caret, dyn.caret);
+    handleOnInput(e, i);
+}
 
   
   $: matrixArray = (matrix).split(" ").map((v) => Number(v));
@@ -98,7 +114,7 @@
         type="text" 
         value={value}
         defaultValue={null}
-        on:keydown={(e) => handleDynamicStep(e, i)}
+        on:keydown={(e) => handleKeyDown(e, i)}
         on:input={(e) => handleOnInput(e, i)}
       />
     {/each}
