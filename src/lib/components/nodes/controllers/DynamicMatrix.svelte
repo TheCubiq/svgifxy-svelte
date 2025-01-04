@@ -18,13 +18,13 @@
     // Handle the sign
     let sign = 1;
     let signOffset = 0;
-    if (value[0] === '-') {
+    const isNegative = value.startsWith('-');
+    if (isNegative) {
       sign = -1;
       signOffset = 1;
     }
-
       
-    const numberString = value.startsWith('-') ? value.slice(1) : value;
+    const numberString = isNegative ? value.slice(1) : value;
     let caretPosInNumber = caretPos - signOffset;
     caretPosInNumber = Math.max(0, caretPosInNumber);
 
@@ -39,18 +39,19 @@
         exponent -= 1;
     }
 
+    // handling 1 that would become 0
+    // special case for 1x, 1xx, etc.
     const editingDigit = numberString[caretPosInNumber];
-
     if (
+      // at the very left
       caretPosInNumber == 0 
       && editingDigit === '1' 
       && numberString.length > 1
       // up negative, down positive
-      && (keyUp == value.startsWith('-')) 
+      && (keyUp == isNegative) 
     ) {
-      // special case for 1x, 1xx, etc.
+      // console.info("special")
       exponent -= 1;
-      console.log(editingDigit, exponent);
     }
 
     const delta = Math.pow(10, exponent);
@@ -62,12 +63,42 @@
     let newValue = currentValue + (keyUp ? delta : -delta);
 
     // Handle precision to avoid floating point issues
+    // todo: fix the precision cutting off the numbers
     const precision = Math.max(0, -exponent);
-    // const precision = 9;
     const newValueString = newValue.toFixed(precision);
-
+  
+  
+    // ---------------
+  
     // Adjust caret position if necessary
-    const newCaretPos = Math.max(0, caretPos + newValueString.length - value.length);
+    // todo: fix the caret pos here:
+    // let newCaretPos = caretPos + newValueString.length - value.length;
+    
+    let newCaretPos = caretPos;
+  
+    // this code is crappy but fixes some issues with the caret.
+  
+    const [oldIntegerPart, oldDecimalPart] = numberString.split('.');
+    const [newIntegerPart, newDecimalPart] = newValueString.split('.');
+
+    // Check if a new digit was added at the front
+    if (newIntegerPart.length > oldIntegerPart.length && caretPos <= oldIntegerPart.length) {
+        newCaretPos += newIntegerPart.length - oldIntegerPart.length;
+    } else if (caretPos > decimalPos) {
+        const oldLength = oldDecimalPart.length;
+        const newLength = newDecimalPart.length;
+        const diff = newLength - oldLength;
+        if (diff > 0) {
+            if (caretPos === value.length) {
+                // If cursor is at the end, move it one position to the left
+                newCaretPos = value.length;
+            } else {
+                newCaretPos += diff;
+            }
+        }
+    }
+  
+    // ---------------
 
     return {value: newValueString, caret: newCaretPos}
   }
