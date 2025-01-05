@@ -10,6 +10,8 @@
   --corner-rad: 0.25rem;
 
   color-scheme: light dark;
+
+  --ftr-glass: brightness(0.9) saturate(2) blur(20px);
 }
 
 @media (prefers-color-scheme: light) {
@@ -157,9 +159,8 @@ body {
     padding: .5em;
 
     background-color: var(--clr-secondary-t800);
-    --_ftr: brightness(0.9) saturate(2) blur(20px);
-    -webkit-backdrop-filter: var(--_ftr);
-    backdrop-filter: var(--_ftr);
+    -webkit-backdrop-filter: var(--ftr-glass);
+    backdrop-filter: var(--ftr-glass);
 
     position: relative;
 

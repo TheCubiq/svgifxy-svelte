@@ -1,7 +1,7 @@
 // Helper function to generate random position
 export const getRandomPosition = (): Position => ({
-	x: Math.floor(Math.random() * 400),
-	y: Math.floor(Math.random() * 400)
+	x: Math.floor(Math.random() * 1000),
+	y: Math.floor(Math.random() * 1000)
 });
 
 export const rgb2hex = (c: string) => {
@@ -17,6 +17,11 @@ export const anyToHex = (anyColor: string = '#000000') => {
 // Helper function to convert kebab-case to camelCase
 export const toCamelCase = (str: string): string => {
 	return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+};
+
+// capitalize first letter
+export const capitalize = (str: string): string => {
+	return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 // from camelCase to kebab-case
