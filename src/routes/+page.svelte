@@ -1,9 +1,12 @@
 <script lang="ts">
 	import FilterEditor from '$lib/components/FilterEditor.svelte';
+	import { SvelteFlowProvider } from '@xyflow/svelte';
 </script>
 
 <main>
+  <SvelteFlowProvider>
   <FilterEditor />
+  </SvelteFlowProvider>
 
   <span>:3</span>
 </main>

@@ -113,13 +113,12 @@
 			position = getRandomPosition();
 		}
 		const id = `node-${Math.random().toString(36).substring(2, 11)}`;
-		nodes.update((n) => [...n, { id, type, position }]);
+		nodes.update((n) => [...n, ({ id, type, position } as Node)]);
 		dndType.set(null);
 	};
 </script>
 
 <div class="editor">
-	<SvelteFlowProvider>
 		<SvelteFlow
 			{nodes}
 			{edges}
@@ -134,7 +133,6 @@
 		</SvelteFlow>
 
 		<Sidebar {nodeTypes} on:addNode={handleAddNode} />
-	</SvelteFlowProvider>
 </div>
 
 <style>

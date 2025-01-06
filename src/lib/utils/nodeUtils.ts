@@ -44,7 +44,7 @@ export const transformFilter = (objFilterRaw: FilterInput): Node[] => {
   return nodes;
 };
 
-export const findAllConnections = (targetId: string, connections: Edge[]) => {
+export const findAllConnections = (targetId: string, connections: Edge[], addTarget = false) => {
   const connectedIds = new Set<string>();
   
   const findSourceNodes = (currentId: string) => {
@@ -64,6 +64,10 @@ export const findAllConnections = (targetId: string, connections: Edge[]) => {
   findSourceNodes(targetId);
 
   // console.log(connectedIds);
+
+  if (addTarget) {
+    connectedIds.add(targetId);
+  }
   
   // Convert Set to Array and return
   return Array.from(connectedIds).reverse();
