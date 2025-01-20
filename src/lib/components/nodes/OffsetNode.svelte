@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Handle, Position, useEdges, useHandleConnections, useNodesData, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
+	import { Handle, Position, useEdges, useNodeConnections, useNodesData, useSvelteFlow, type Node, type NodeProps } from '@xyflow/svelte';
 	import Select from './controllers/Select.svelte';
 	import { findAllConnections, getSource, limitedConnect } from '$lib/utils/nodeUtils';
 	import SvgPreview from './controllers/SvgPreview.svelte';
@@ -9,17 +9,29 @@
 	import { cubicOut } from 'svelte/easing';
 	import { onDestroy, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	type $$Props = NodeProps;
+	import NumericInput from './controllers/NumericInput.svelte';
+	
+	type OffsetNode = Node<{
+		dx: number;
+		dy: number;
+		in?: string;
+	}>;
+
+	type $$Props = NodeProps<OffsetNode>;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
 
-
+	
 	let isDragging = false;
 
 	let startPos = { x: 0, y: 0 };
 
 	
 	const { updateNodeData } = useSvelteFlow();
+
+	const updateNode = (prop: Partial<OffsetNode['data']>) => {
+		updateNodeData(id, prop);
+	}
 	
 	interface DOMRectDimensions {
 		x: number;
@@ -134,11 +146,10 @@
 	}
 
 	
-	const offset_in = useHandleConnections({
-      nodeId: id,
-      id: "in",
-      type: 'target'
-  })
+	const offset_in = useNodeConnections({
+		id,
+		handleType: 'target'
+	});
 
 	$: {
     updateNodeData(id, { in: getSource($offset_in)});
@@ -171,19 +182,24 @@
 	<div class="content">
 		<h3>Offset</h3>
 		
-		<input 
-			type="number" 
+		<NumericInput
+			prop=dx
 			value={data.dx} 
-			class="nodrag"
-			on:input={(e) => updateNodeData(id, { dx: e.currentTarget.value })}
+			valUpdate={updateNode}
 		/>
 
-		<input 
+		<NumericInput
+			prop=dy
+			value={data.dy} 
+			valUpdate={updateNode}
+		/>
+
+		<!-- <input 
 			type="number" 
 			value={data.dy} 
 			class="nodrag"
 			on:input={(e) => updateNodeData(id, { dy: e.currentTarget.value })}
-		/>
+		/> -->
 
 		<div
 			tabindex="-1"
