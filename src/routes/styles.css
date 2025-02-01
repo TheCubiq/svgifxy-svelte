@@ -154,7 +154,14 @@ body {
 
   .node {
     border-radius: var(--corner-rad);
-    outline: solid 1px var(--clr-text-t200);
+    /* border: solid 1px var(--clr-text-t200);
+    */
+
+    transition: box-shadow .15s; 
+
+    --_outline-width: 1px;
+
+    box-shadow: 0 0 0 var(--_outline-width) var(--clr-text-t200);
 
     padding: .5em;
 
@@ -163,6 +170,10 @@ body {
     backdrop-filter: var(--ftr-glass);
 
     position: relative;
+
+    .svelte-flow__node.selected & {
+      --_outline-width: 2px;
+    }
 
     &::before {
       content: '';

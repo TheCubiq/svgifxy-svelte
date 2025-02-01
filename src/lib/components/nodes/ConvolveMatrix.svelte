@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { Handle, Position, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
+	import { Handle, Position, useHandleConnections, useNodeConnections, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
 	import { anyToHex, rgb2hex } from '$lib/utils/commonUtils';
 	import DynamicMatrix from './controllers/DynamicMatrix.svelte';
+	import { limitedConnect } from '$lib/utils/nodeUtils';
 	type $$Props = NodeProps;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
@@ -14,9 +15,22 @@
 
 	const { updateNodeData } = useSvelteFlow();
 
+
+	const c_in1 = useNodeConnections({
+      id,
+      handleId: "in",
+      handleType: 'target'
+  })
+
 </script>
 
 <div class="node">
+	<Handle 
+    class="handle" 
+    type="target" 
+    id="in" 
+    isConnectable={limitedConnect($c_in1)}
+    position={Position.Top} />
 	<div class="content">
 		<h3>Convolve</h3>
 		<!-- <input 

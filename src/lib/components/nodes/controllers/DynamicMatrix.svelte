@@ -1,18 +1,39 @@
 <script lang="ts">
+	import NumbericDynamicInput from "./NumericDynamicInput.svelte";
+
   // controller for feConvolveMatrix
 
   export let matrix: string = "0 0 0 0 1 0 0 0 0" 
   export let updateNodeData: (id: string, data: any) => void;
   export let id: string;
 
-  const handleOnInput = (evt, i: number) => {
+  const handleOnInput = (evt, i: number | string) => {
      evt.preventDefault();
+
+    //  convert to number
+    i = Number(i);
+
      if (isNaN(evt.currentTarget.value)) {
       evt.currentTarget.value = matrixArray[i];
       return;
     }
     matrixArray[i] = Number(evt.currentTarget.value);
   }
+
+  const updateMatrix = (prop: Partial<OffsetNode['data']>) => {
+
+    // prop = {[prop]: [value]}
+
+    // const key = Object.keys(prop)[0];
+    // const value = prop[key];
+
+    const [key, val] = Object.entries(prop)[0];
+    
+    matrixArray[Number(key)] = val;
+
+  }
+
+
 
   const handleDynamicStep = (value, caretPos, keyUp) => {
     // Handle the sign
@@ -141,12 +162,17 @@
     style={getCssGrid(matrixDimensions)}
   >
     {#each matrixArray as value, i}
-      <input
+      <!-- <input
         type="text" 
         value={value}
         defaultValue={null}
         on:keydown={(e) => handleKeyDown(e, i)}
         on:input={(e) => handleOnInput(e, i)}
+      /> -->
+      <NumbericDynamicInput
+        value={value}
+        prop={i + ''}
+        valUpdate={updateMatrix}
       />
     {/each}
   </div>
