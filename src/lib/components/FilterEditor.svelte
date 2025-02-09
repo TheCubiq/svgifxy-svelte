@@ -52,7 +52,7 @@
 
   const nodes = writable(
     [
-			...transformFilter(objFilterRaw as FilterInput),
+			// ...transformFilter(objFilterRaw as FilterInput),
 			// ...additionalNodes
     ]
   );
@@ -77,19 +77,7 @@
 			id: 'e3'
 		}
 	];
-	const edges = writable(initialEdges);
-
-	const nodeTypes: NodeTypes = {
-		feFlood: FloodNode,
-		feBlend: BlendNode,
-		feGaussianBlur: GaussianBlurNode,
-		feConvolveMatrix: ConvolveMatrix,
-		feDisplacementMap: DisplacementNode,
-		feTurbulence: TurbulenceNode,
-		preview: PreviewNode,
-		feOffset: OffsetNode,
-		sourceGraphic: SourceGraphicNode
-	};
+	const edges = writable(initialEdges);	
 
 	const onDragOver = (event: DragEvent) => {
 		event.preventDefault();

@@ -17,9 +17,9 @@ const nodeInputs = [
 
 const nodeLogic = (inputs) => {
   const {
-    id,
-    'flood-color': floodColor,
-    'flood-opacity': floodOpacity
+    id = 123,
+    'flood-color': floodColor = "#000",
+    'flood-opacity': floodOpacity = "1",
   } = inputs;
 
   return `<feFlood result="${id}" flood-color="${floodColor}" flood-opacity="${floodOpacity}" />`

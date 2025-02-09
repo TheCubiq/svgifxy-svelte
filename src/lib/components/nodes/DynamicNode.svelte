@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Handle, Position, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
+	import { Handle, Position, useSvelteFlow, type NodeProps, type Node } from '@xyflow/svelte';
 	import { anyToHex, rgb2hex } from '$lib/utils/commonUtils';
 	import Modal from '../Modal.svelte';
 	import CodeMirror from "svelte-codemirror-editor";
@@ -10,25 +10,46 @@
 	import feflood from './internalNodes/feflood.js?raw';
 	import { onMount } from 'svelte';
 
-	type $$Props = NodeProps;
+	type DynamicNode = Node<{
+		scriptable: string;
+		svgFilter: string;
+		customProps: any;
+	}>
+	type $$Props = NodeProps<DynamicNode>;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
 
 	let showSettings = false;
 
-	let nodeInputs: any, nodeLogic;
+	let nodeInputs: any;
+	let nodeLogic = (s: any) => '';
 
 	const handleCompile = () => {
-		const wrapped = `${data['scriptable']}; return {nodeInputs, nodeLogic};`;
+		const wrapped = `${data.scriptable}; return {nodeInputs, nodeLogic};`;
 		const compiled = new Function(wrapped)();
 		nodeInputs = compiled.nodeInputs;
 		nodeLogic = compiled.nodeLogic;
+		// todo: fix this
+		const props = nodeInputs.reduce((acc: any, i: any) => {
+			acc[i.name] = i.default;
+			return acc;
+		}, {});
 
-		console.log(nodeInputs, nodeLogic);
+		updateNodeData(id, { customProps: props, "scriptable": data.scriptable });
 	};
 
 	const { updateNodeData,  } = useSvelteFlow();
 
+	const handleInput = (e: SvelteInputEvent, i: { name: string | number; }) => {
+		let {customProps: props} = data;
+		props[i.name] = e.currentTarget.value;
+
+		updateNodeData(id, { 
+			"svgFilter": nodeLogic(props), 
+			customProps: props 
+		});
+	};
+		
 	onMount(() => {
 		updateNodeData(id, { "scriptable": feflood });
 	});
@@ -52,22 +73,17 @@
 	<button class="settings" on:click={() => showSettings = true}><CodeIcon size="1em"/></button>
 	<div class="content">
 		<h3>Dyn</h3>
-		<!-- <textarea spellcheck="false" class="nodrag" bind:value={data['scriptable']}></textarea> -->
-
-
 		{#each nodeInputs as i}
-			<input type="text" value={i.type} />
+			{#if i.type === 'select'}
+				<select>
+					{#each i.options as o}
+						<option value={o}>{o}</option>
+					{/each}
+				</select>
+			{:else}
+				<input type={i.type} value={data.customProps[i.name]} on:input={e => handleInput(e, i)} />
+			{/if}
 		{/each}
-
-		<!-- <input
-			type="color"
-			on:input={
-				(evt) => updateNodeData(
-					id, { "flood-color": evt.currentTarget.value }
-				)
-			}
-			value={anyToHex(floodColor as string)}
-		/> -->
 	</div>
 	<Handle type="source" position={Position.Bottom} />
 </div>

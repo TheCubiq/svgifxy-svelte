@@ -27,3 +27,5 @@ interface Node {
   data: Record<string, any>;
   position: Position;
 }
+
+type SvelteInputEvent = Event & { currentTarget: EventTarget & HTMLInputElement }
