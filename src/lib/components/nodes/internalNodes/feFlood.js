@@ -4,14 +4,14 @@ const nodeInputs = [
     displayName: 'Flood Color',
     name: 'flood-color',
     type: 'color',
-    default: "#000",
+    default: "#333333",
     description: 'The color of the flood'
   },
   {
     displayName: 'Flood Opacity',
     name: 'flood-opacity',
     type: 'number',
-    default: "1",
+    default: "100",
   }
 ];
 
@@ -22,5 +22,5 @@ const nodeLogic = (inputs) => {
     'flood-opacity': floodOpacity = "1",
   } = inputs;
 
-  return `<feFlood result="${id}" flood-color="${floodColor}" flood-opacity="${floodOpacity}" />`
+  return `<feFlood result="${id}" flood-color="${floodColor}" flood-opacity="${floodOpacity / 100}" />`
 };

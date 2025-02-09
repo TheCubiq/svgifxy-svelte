@@ -13,16 +13,22 @@
 	type DynamicNode = Node<{
 		scriptable: string;
 		svgFilter: string;
-		customProps: any;
+		customProps: Record<string, any>;
 	}>
 	type $$Props = NodeProps<DynamicNode>;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
+	
+	const { updateNodeData,  } = useSvelteFlow();
 
 	let showSettings = false;
-
 	let nodeInputs: any;
-	let nodeLogic = (s: any) => '';
+	let nodeLogic = (s: any, id: any) => '';
+
+	const updateDynamicNode = (props: any) => updateNodeData(id, { 
+		customProps: props,
+		svgFilter: nodeLogic(props, id), 
+	});
 
 	const handleCompile = () => {
 		const wrapped = `${data.scriptable}; return {nodeInputs, nodeLogic};`;
@@ -31,34 +37,32 @@
 		nodeLogic = compiled.nodeLogic;
 		// todo: fix this
 		const props = nodeInputs.reduce((acc: any, i: any) => {
-			acc[i.name] = i.default;
+			acc[i.name] = i.name in data.customProps ? data.customProps[i.name] : i.default;
 			return acc;
 		}, {});
 
-		updateNodeData(id, { customProps: props, "scriptable": data.scriptable });
+		updateDynamicNode(props);
 	};
 
-	const { updateNodeData,  } = useSvelteFlow();
+	
 
 	const handleInput = (e: SvelteInputEvent, i: { name: string | number; }) => {
-		let {customProps: props} = data;
-		props[i.name] = e.currentTarget.value;
+		let localProps = data.customProps;
+		localProps[i.name] = e.currentTarget.value;
 
-		updateNodeData(id, { 
-			"svgFilter": nodeLogic(props), 
-			customProps: props 
-		});
+		updateDynamicNode(localProps);
+		
 	};
 		
 	onMount(() => {
-		updateNodeData(id, { "scriptable": feflood });
+		updateNodeData(id, { scriptable: feflood, customProps: {} });
 	});
 
 </script>
 
 <!-- {#if showSettings} -->
 	
-	
+
 <Modal bind:showModal={showSettings} customClass="nodrag nopan nozoom">
 	<div>
 		<h1>Modal</h1>
@@ -74,15 +78,7 @@
 	<div class="content">
 		<h3>Dyn</h3>
 		{#each nodeInputs as i}
-			{#if i.type === 'select'}
-				<select>
-					{#each i.options as o}
-						<option value={o}>{o}</option>
-					{/each}
-				</select>
-			{:else}
 				<input type={i.type} value={data.customProps[i.name]} on:input={e => handleInput(e, i)} />
-			{/if}
 		{/each}
 	</div>
 	<Handle type="source" position={Position.Bottom} />

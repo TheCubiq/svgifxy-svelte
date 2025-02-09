@@ -125,7 +125,7 @@ export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
     let element = [{}];
 
     if (node.type === 'dynamic') {
-      const elements = xml2js(node.data.svgFilter as string);
+      const elements = xml2js(node.data.svgFilter as string || '');
       element = elements.elements || [];
     } else { 
       element = [{

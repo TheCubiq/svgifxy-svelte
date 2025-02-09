@@ -20,14 +20,27 @@ const nodeInputs = [
 
 const mod = (n, m) => ((n % m) + m) % m;
 const rot = (axis, channel, mode) => axis * (mod((mode + channel), 3) - 1);
+const identify = (id, str) => {
+  return str.replace(/(result|in|in2)='([^']*)'/g, (match, attr, value) => {
+    if (/^__(.*?)__$/.test(value)) {
+      // remove the leading and trailing double underscores
+      return `${attr}='${value.slice(2, -2)}'`;
+    } else if (
+      value === 'SourceGraphic' ||
+      value === 'SourceAlpha'
+    ) {
+      return `${attr}='${value}'`;
+    }
+    return `${attr}='${id}-${value}'`;
+  });
+};
 
-const nodeLogic = (inputs) => {
+const nodeLogic = (props, id, inputs) => {
   let {
-    id = 123,
     amount = 1,
     mode = 1,
     deg = 20,
-  } = inputs;
+  } = props;
 
   amount = amount;  
 
@@ -35,8 +48,7 @@ const nodeLogic = (inputs) => {
     x = Math.sin(deg / 180 * Math.PI),
     y = Math.cos(deg / 180 * Math.PI);
 
-
-  const rgbSplit =     
+  const rgbSplit = identify(id,  
     // B
     "<feOffset " +
     "in='SourceGraphic' result='off-b' " +
@@ -57,7 +69,7 @@ const nodeLogic = (inputs) => {
     "values='0 0 0 0 0, 0 1 0 0 0, 0 0 0 0 0, 0 0 0 1 0' " +
     "/>" +
       
-      // R
+    // R
     "<feOffset " +
     "in='SourceGraphic' result='off-r' " +
       `dx='${amount * rot(x, -1, mode)}' ` +
@@ -66,9 +78,10 @@ const nodeLogic = (inputs) => {
     "<feColorMatrix type='matrix' in='off-r' result='R' " +
     "values='1 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 1 0' " +
     "/>" +
-      
+
     "<feBlend mode='screen' in='B' in2='G' result='BG' />" +
-    "<feBlend mode='screen' in='BG' in2='R' />"
+    `<feBlend mode='screen' in='BG' in2='R' result='__${id}__' />`
+  );
 
   return rgbSplit;
 };
