@@ -8,6 +8,7 @@
     "npm:@sveltejs/vite-plugin-svelte@^5.0.3": "5.0.3_svelte@5.19.0__acorn@8.14.0_vite@6.0.7",
     "npm:@xyflow/svelte@~0.1.26": "0.1.28_svelte@5.19.0__acorn@8.14.0",
     "npm:lucide-svelte@0.473.0": "0.473.0_svelte@5.19.0__acorn@8.14.0",
+    "npm:open-props@^1.7.12": "1.7.12",
     "npm:prettier-plugin-svelte@^3.3.2": "3.3.3_prettier@3.4.2_svelte@5.19.0__acorn@8.14.0",
     "npm:prettier@^3.4.2": "3.4.2",
     "npm:svelte-check@^4.1.1": "4.1.4_svelte@5.19.0__acorn@8.14.0_typescript@5.7.3",
@@ -591,6 +592,9 @@
     "nanoid@3.3.8": {
       "integrity": "sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w=="
     },
+    "open-props@1.7.12": {
+      "integrity": "sha512-HoC1hxNifxehfcsX+L2c+JmF/dD+uhWADNFPYhskcnwNBzboyUZXeD72JpVrFmxYWXl7Li3u5XfHFzpoQ+VKCQ=="
+    },
     "picocolors@1.1.1": {
       "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="
     },
@@ -749,6 +753,7 @@
         "npm:@sveltejs/vite-plugin-svelte@^5.0.3",
         "npm:@xyflow/svelte@~0.1.26",
         "npm:lucide-svelte@0.473.0",
+        "npm:open-props@^1.7.12",
         "npm:prettier-plugin-svelte@^3.3.2",
         "npm:prettier@^3.4.2",
         "npm:svelte-check@^4.1.1",

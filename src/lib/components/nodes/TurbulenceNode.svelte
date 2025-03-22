@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Handle, Position, useEdges, useNodesData, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
+	import { Handle, Position, useEdges, useNodesData, useSvelteFlow, type NodeProps, type Node} from '@xyflow/svelte';
 	import Select from './controllers/Select.svelte';
 	import { findAllConnections } from '$lib/utils/nodeUtils';
 	import SvgPreview from './controllers/SvgPreview.svelte';
@@ -9,7 +9,14 @@
 	import { cubicOut } from 'svelte/easing';
 	import { onDestroy, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	type $$Props = NodeProps;
+
+	type TurbulenceNode = Node<{
+		baseFrequency: string;
+		numOctaves: number;
+		seed: number;
+		type: string;
+	}>
+	type $$Props = NodeProps<TurbulenceNode>;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
 
@@ -161,7 +168,7 @@
 	});
 
 	const spaceSeparated = (str: string, pos: number = 0) => {
-		console.log(str);
+		// console.log(str);
 		str = (str || '').trim();
 		const arr = str.split(' ');
 		return Number(arr[pos] || str);

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope');
+@import 'filters.css';
 
 :root {
   font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
@@ -10,8 +11,6 @@
   --corner-rad: 0.25rem;
 
   color-scheme: light dark;
-
-  --ftr-glass: brightness(0.9) saturate(2) blur(20px);
 }
 
 @media (prefers-color-scheme: light) {

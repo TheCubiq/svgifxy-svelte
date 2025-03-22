@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { ChangeEventHandler, EventHandler, FormEventHandler } from "svelte/elements";
 	import NumbericDynamicInput from "./NumericDynamicInput.svelte";
 
   // controller for feConvolveMatrix
@@ -7,33 +8,21 @@
   export let updateNodeData: (id: string, data: any) => void;
   export let id: string;
 
-  const handleOnInput = (evt, i: number | string) => {
+  const handleOnInput = (evt: SvelteInputEvent, i: number | string) => {
      evt.preventDefault();
-
     //  convert to number
     i = Number(i);
-
-     if (isNaN(evt.currentTarget.value)) {
-      evt.currentTarget.value = matrixArray[i];
+     if (evt.currentTarget.value) {
+      evt.currentTarget.value = matrixArray[i].toString();
       return;
     }
     matrixArray[i] = Number(evt.currentTarget.value);
   }
 
   const updateMatrix = (prop: Partial<OffsetNode['data']>) => {
-
-    // prop = {[prop]: [value]}
-
-    // const key = Object.keys(prop)[0];
-    // const value = prop[key];
-
     const [key, val] = Object.entries(prop)[0];
-    
     matrixArray[Number(key)] = val;
-
   }
-
-
 
   const handleDynamicStep = (value, caretPos, keyUp) => {
     // Handle the sign

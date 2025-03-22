@@ -9,21 +9,14 @@
 		SvelteFlowProvider
 	} from '@xyflow/svelte';
 	import { writable } from 'svelte/store';
-	import GaussianBlurNode from './nodes/GaussianBlurNode.svelte';
-	import FloodNode from './nodes/FloodNode.svelte';
-	import SourceGraphicNode from './nodes/SourceGraphicNode.svelte';
-	import PreviewNode from './nodes/PreviewNode.svelte';
-	import TurbulenceNode from './nodes/TurbulenceNode.svelte';
 	import { xml2js, type ElementCompact } from 'xml-js';
 
 	import type { Node } from '@xyflow/svelte';
-	import BlendNode from './nodes/BlendNode.svelte';
 	import { transformFilter } from '../utils/nodeUtils';
-	import DisplacementNode from './nodes/DisplacementNode.svelte';
-	import ConvolveMatrix from './nodes/ConvolveMatrix.svelte';
 	import { getRandomPosition } from '$lib/utils/commonUtils';
 	import Sidebar from './Sidebar.svelte';
 	import { dndType } from '$lib/stores';
+	import { xyFilterNodes as nodeTypes } from './_nodes';
 
 	const { screenToFlowPosition } = useSvelteFlow();
 
@@ -87,6 +80,13 @@
 		}
 	};
 
+	const handleModalAction = (e: CustomEvent) => {
+		console.log(e);
+		// if (e.detail.action === 'close') {
+		// 	nodes.update((n) => n.filter((node) => node.id !== e.detail.id));
+		// }
+	};
+
 	const handleAddNode = (e: DragEvent) => {
 		const type = $dndType;
 		if (!type) return;
@@ -107,11 +107,11 @@
 </script>
 
 <div class="editor">
+	<!-- fitView -->
 		<SvelteFlow
 			{nodes}
 			{edges}
 			{nodeTypes}
-			fitView
 			proOptions={{ hideAttribution: true }}
 			maxZoom={5}
 			on:drop={handleAddNode}
