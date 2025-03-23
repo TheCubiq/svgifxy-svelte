@@ -17,6 +17,7 @@
 	import Sidebar from './Sidebar.svelte';
 	import { dndType } from '$lib/stores';
 	import { xyFilterNodes as nodeTypes } from './_nodes';
+	import { createPortal } from '$lib/utils/portal';
 
 	const { screenToFlowPosition } = useSvelteFlow();
 
@@ -121,6 +122,10 @@
 		</SvelteFlow>
 
 		<Sidebar {nodeTypes} on:addNode={handleAddNode} />
+		
+		<div use:createPortal={'right-sidebar'} class="portal">
+			<!-- Portal Placeholder -->
+		</div>
 </div>
 
 <style>
