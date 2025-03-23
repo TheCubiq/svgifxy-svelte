@@ -7,8 +7,6 @@
   <SvelteFlowProvider>
   <FilterEditor />
   </SvelteFlowProvider>
-
-  <!-- <span>:3</span> -->
 </main>
 
 <style>
