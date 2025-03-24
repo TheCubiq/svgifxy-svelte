@@ -9,7 +9,7 @@ import TurbulenceNode from './nodes/TurbulenceNode.svelte';
 import PreviewNode from './nodes/PreviewNode.svelte';
 import OffsetNode from './nodes/OffsetNode.svelte';
 import SourceGraphicNode from './nodes/SourceGraphicNode.svelte';
-import { ActivityIcon, BinaryIcon, ContrastIcon, FanIcon, icons, MoveIcon, PaintRollerIcon, ScanEyeIcon, TargetIcon, WavesIcon, WindIcon } from 'lucide-svelte';
+import { ActivityIcon, BinaryIcon, ContrastIcon, FanIcon, MoveIcon, PaintRollerIcon, ScanEyeIcon, TargetIcon, WavesIcon, WindIcon } from 'lucide-svelte';
 import DynamicNode from './nodes/DynamicNode.svelte';
 
 
