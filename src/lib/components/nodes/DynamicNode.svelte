@@ -10,6 +10,7 @@
     import feflood from './internalNodes/feflood.js?raw';
     import nodeInternals from '$lib/utils/nodeInternals.js?raw';
     import { onMount } from 'svelte';
+	import SelectInput from './controllers/SelectInput.svelte';
 
     type DynamicNode = Node<{
         scriptable: string;
@@ -91,10 +92,20 @@
         {:else}
             <p>Node Not Loaded Yet</p>
         {/if}
+        <SelectInput
+            items={[
+                { name: 'Red', value: 'R' },
+                { name: 'Green', value: 'G' },
+                { name: 'Blue', value: 'B' },
+                { name: 'Alpha', value: 'A' }
+            ]}
+            on:change={e => updateDynamicNode({ channel: e.detail })} />
+            <!-- value={data.customProps?.channel || 'R'} -->
+        </div>
+    <div class="handle-wrapper">
+        <Handle type="source" position={Position.Bottom} />
     </div>
-    <Handle type="source" position={Position.Bottom} />
-</div>
-
+    
 <style>
 .node {
     min-width: 5rem;
