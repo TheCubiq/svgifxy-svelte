@@ -166,6 +166,14 @@ body {
 
 }
 
+.ͼo {
+  background: none;
+
+  .cm-gutters {
+    background: none;
+  }
+}
+
   .node {
     border-radius: var(--corner-rad);
     /* border: solid 1px var(--clr-text-t200);
@@ -206,15 +214,26 @@ body {
       gap: 0.5em;
     }
 
+    .svelte-flow__handle {
+      --_handle-size: .8em;
+      display: flex;
+      height: var(--_handle-size);
+      width: var(--_handle-size);
+      border-radius: 50%;
+
+      --xy-handle-background-color: var(--clr-bg);
+      --xy-handle-border-color: var(--clr-text-t200);
+    }
 
     .handle-wrapper {
       display: flex;
       justify-content: space-around;
+      padding: .25em;
       position: absolute;
       inset: 0;
       pointer-events: none;
 
-      [class *="svelte-flow__handle"] {
+      .svelte-flow__handle {
         position: relative;
         top: 0;
         left: 0;
@@ -228,7 +247,7 @@ body {
           transform: translateY(-50%);
         }
         :has(> &[data-handlepos="bottom"]) {
-          bottom: unset;
+          top: unset;
           transform: translateY(50%);
         }
         :has(> &[data-handlepos="right"]) {
