@@ -105,6 +105,8 @@
     <div class="handle-wrapper">
         <Handle type="source" position={Position.Bottom} />
     </div>
+
+</div>
     
 <style>
 .node {
