@@ -19,6 +19,9 @@
         min: true,
         max: true
     };
+
+    export let scrollMultiplier = 1; // default scroll multiplier
+
     export let defaultValue = 0.5;
 
     const dispatch = createEventDispatcher();
@@ -33,7 +36,7 @@
     };
 
     // custom cursors based on angle uwu
-    $: cursorStyle = `${infiniteMouse ? 'none' : 
+    $: cursorStyle = `${infiniteMouse ? 'pointer' : 
         angle === 0 ? 'ew-resize' :
         angle === 90 ? 'ns-resize' :
         `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="transform: rotate(${angle}deg)"><text y="16" x="16" text-anchor="middle" dominant-baseline="middle" fill="white">↔</text></svg>') 16 16, auto`}`;
@@ -82,6 +85,12 @@
     {sensitivitySettings}
     defaultX={0.5 + Math.cos(angleRad) * (defaultValue - 0.5)}
     defaultY={0.5 + Math.sin(angleRad) * (defaultValue - 0.5)}
+
+    scrollToModify={{
+        x: scrollMultiplier * Math.cos(angleRad),
+        y: scrollMultiplier * Math.sin(angleRad)
+    }}
+
     on:change={handleChange}
     on:release={handleRelease}
     on:reset={handleReset}

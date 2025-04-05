@@ -13,6 +13,7 @@
 	export let friction = 0.9; // Friction for smooth scrolling
 	export let cursor = 'auto'; // CSS cursor style
 	export let infiniteMouse = false; // Enable infinite mouse scrolling
+	export let scrollToModify = { x: 0, y: 0 }; // Control scroll modification per axis
 
 	// Sensitivity settings
 	export let sensitivitySettings = {
@@ -113,16 +114,37 @@
 		dispatch('change', { x, y });
 	});
 
-	// Handle scroll wheel to adjust sensitivity
+	// Handle scroll wheel to adjust sensitivity or modify values
 	function handleWheel(e: WheelEvent) {
-		if (disabled || !active) return;
-
+		if (disabled) return;
+		
 		e.preventDefault();
 		e.stopPropagation();
 
-		// Adjust sensitivity based on wheel direction
-		const delta = e.deltaY > 0 ? -0.1 : 0.1;
-		adjustSensitivity(delta);
+		if (active) {
+			// When dragging, adjust sensitivity as before
+			const delta = e.deltaY > 0 ? -0.1 : 0.1;
+			adjustSensitivity(delta);
+		} else if (scrollToModify.x !== 0 || scrollToModify.y !== 0) {
+			// When not dragging and any scroll axis is enabled
+			const delta = e.deltaY > 0 ? -0.02 : 0.02;
+			
+			// Calculate new position using multipliers
+			let newPos = {
+				x: x + delta * scrollToModify.x,
+				y: y + delta * scrollToModify.y
+			};
+
+			if (smoothScroll) {
+				velocity = {
+					x: delta * scrollToModify.x,
+					y: delta * scrollToModify.y
+				};
+				applyMomentum();
+			}
+
+			updatePosition(newPos);
+		}
 	}
 
 	// Adjust sensitivity and keep within bounds
@@ -445,7 +467,7 @@
 <style>
 	.position-container {
 		position: relative;
-		overflow: hidden;
+		/* overflow: hidden; */
 		user-select: none;
 		touch-action: none;
 		box-sizing: border-box;
