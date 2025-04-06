@@ -43,9 +43,13 @@ const nodeSetup = {
 		{
 			displayName: 'Degrees',
 			name: 'deg',
-			type: 'number',
+			type: 'knob',
 			default: '20',
-			description: 'The degrees of chromatic aberration'
+			description: 'The degrees of chromatic aberration',
+			controllerConfig: {
+				min: 0,
+				max: 360
+			}
 		}
 	]
 };

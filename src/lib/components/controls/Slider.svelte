@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { roundTo } from '$lib/utils/commonUtils';
     import Pan1DArea from '../nodes/controllers/Pan1DArea.svelte';
     import { createEventDispatcher } from 'svelte';
     
@@ -20,9 +21,6 @@
 
     // Convert our actual value back to 0-1 range for Pan1DArea
     $: normalizedValue = (value - config.min) / (config.max - config.min);
-
-    // Normalize value for visual display (gradient)
-    $: visualValue = (value - config.min) / (config.max - config.min);
 </script>
 
 <Pan1DArea 
@@ -33,7 +31,7 @@
     on:change={handleChange}
     let:pos
 >
-    <div class="pan1d-area" style:--_v="{visualValue * 100}%">
+    <div class="pan1d-area" style:--_v="{roundTo(normalizedValue * 100)}%">
         <p>Value:</p>
         <p>{value.toFixed(2)}</p>
     </div>

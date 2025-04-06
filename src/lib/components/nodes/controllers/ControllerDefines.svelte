@@ -1,5 +1,6 @@
 <script lang="ts">
     import Slider from '../../controls/Slider.svelte';
+    import Knob from '../../controls/Knob.svelte';
 
     export let type: string;
     export let value: any;
@@ -8,6 +9,7 @@
 
     const controllers: Record<string, any> = {
         'slider': Slider,
+        'knob': Knob,
         // Add more controllers here as needed
     };
 
