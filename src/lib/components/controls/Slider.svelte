@@ -1,16 +1,43 @@
 <script lang="ts">
     import Pan1DArea from '../nodes/controllers/Pan1DArea.svelte';
+    import { createEventDispatcher } from 'svelte';
+    
     export let value = 0.5;
     export let angle = 0;
+    export let config = {
+        min: 0,
+        max: 1
+    };
+    
+    const dispatch = createEventDispatcher();
+
+    function handleChange(e: CustomEvent) {
+        // Scale the 0-1 value from Pan1DArea to our min-max range
+        const scaledValue = config.min + (e.detail.value * (config.max - config.min));
+        value = scaledValue;
+        dispatch('input', scaledValue);
+    }
+
+    // Convert our actual value back to 0-1 range for Pan1DArea
+    $: normalizedValue = (value - config.min) / (config.max - config.min);
+
+    // Normalize value for visual display (gradient)
+    $: visualValue = (value - config.min) / (config.max - config.min);
 </script>
 
-    <Pan1DArea {value} {angle} mode="relative" 
-    scrollMultiplier={0.2} let:pos>
-        <div class="pan1d-area" style:--_v="{pos * 100}%">
-            <p>Value:</p>
-            <p>{pos}</p>
-        </div>
-    </Pan1DArea>
+<Pan1DArea 
+    value={normalizedValue}
+    {angle} 
+    mode="relative" 
+    scrollMultiplier={0.2} 
+    on:change={handleChange}
+    let:pos
+>
+    <div class="pan1d-area" style:--_v="{visualValue * 100}%">
+        <p>Value:</p>
+        <p>{value.toFixed(2)}</p>
+    </div>
+</Pan1DArea>
 
 <style>
     .controller-wrapper {

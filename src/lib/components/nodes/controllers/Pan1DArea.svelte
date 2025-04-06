@@ -24,6 +24,11 @@
 
     export let defaultValue = 0.5;
 
+    export let config = {
+        min: 0,
+        max: 10
+    };
+
     const dispatch = createEventDispatcher();
 
     // Convert angle to radians for Math functions
@@ -48,7 +53,7 @@
         // Calculate the displacement from center (0.5, 0.5)
         const dx = newX - 0.5;
         const dy = newY - 0.5;
-        
+
         // Project the point onto our angle vector using dot product
         const projectedValue = (dx * Math.cos(angleRad) + dy * Math.sin(angleRad)) + 0.5;
         
@@ -82,20 +87,22 @@
     {friction}
     cursor={cursorStyle}
     {infiniteMouse}
-    {sensitivitySettings}
+    {sensitivitySettings} 
     defaultX={0.5 + Math.cos(angleRad) * (defaultValue - 0.5)}
     defaultY={0.5 + Math.sin(angleRad) * (defaultValue - 0.5)}
-
+    
     scrollToModify={{
         x: scrollMultiplier * Math.cos(angleRad),
         y: scrollMultiplier * Math.sin(angleRad)
     }}
 
-    on:change={handleChange}
-    on:release={handleRelease}
-    on:reset={handleReset}
-    on:sensitivity={handleSensitivity}
+on:change={handleChange}
+on:release={handleRelease}
+on:reset={handleReset}
+on:sensitivity={handleSensitivity}
 >
+<!-- defaultX={0.5 + Math.cos(angleRad) * ((defaultValue - config.min) / (config.max - config.min) - 0.5)}
+defaultY={0.5 + Math.sin(angleRad) * ((defaultValue - config.min) / (config.max - config.min) - 0.5)} -->
     <slot slot="default" pos={value} />
 </Pan2DArea>
 

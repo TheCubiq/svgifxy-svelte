@@ -57,6 +57,12 @@
 	// For emitting events
 	const dispatch = createEventDispatcher();
 
+	// Add these variables after other state declarations
+	let mouseDownTimer: ReturnType<typeof setTimeout> | null = null;
+	let lastClickTime = 0;
+	const DOUBLE_CLICK_DELAY = 200; // ms
+	const POINTER_LOCK_DELAY = 100; // ms
+
 	// Reset sensitivity when component initializes
 	onMount(() => {
 		sensitivity = sensitivitySettings.default;
@@ -347,6 +353,15 @@
 	function handleMouseDown(e: GestureEvent) {
 		if (disabled) return;
 		
+		const currentTime = Date.now();
+		const isDoubleClick = currentTime - lastClickTime < DOUBLE_CLICK_DELAY;
+		lastClickTime = currentTime;
+		
+		if (isDoubleClick) {
+			handleDoubleClick();
+			return;
+		}
+		
 		active = true;
 		
 		// Cancel any ongoing animation
@@ -360,9 +375,18 @@
 		velocity = { x: 0, y: 0 };
 		
 		if (infiniteMouse && mode === 'relative' && pointerLockSupported) {
-			// Request pointer lock for infinite mouse mode
-			requestPointerLock();
-		}
+				// Clear any existing timer
+				if (mouseDownTimer) {
+					clearTimeout(mouseDownTimer);
+				}
+				
+				// Set timer for pointer lock
+				mouseDownTimer = setTimeout(() => {
+					if (active) { // Only request lock if still active
+						requestPointerLock();
+					}
+				}, POINTER_LOCK_DELAY);
+			}
 		
 		if (mode === 'absolute') {
 			updatePosition(pos);
@@ -418,6 +442,9 @@
 			if (isPointerLocked) {
 				exitPointerLock();
 			}
+		}
+		if (mouseDownTimer) {
+			clearTimeout(mouseDownTimer);
 		}
 	});
 

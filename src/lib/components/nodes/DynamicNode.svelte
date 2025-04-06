@@ -11,6 +11,7 @@
     import nodeInternals from '$lib/utils/nodeInternals.js?raw';
     import { onMount } from 'svelte';
 	import SelectInput from './controllers/SelectInput.svelte';
+    import ControllerDefines from './controllers/ControllerDefines.svelte';
 
     type DynamicNode = Node<{
         scriptable: string;
@@ -87,20 +88,21 @@
         </div>
         {#if nodeSetup}
             {#each nodeInputs as i}
-                <input type={i.type} value={data.customProps[i.name]} on:input={e => handleInput(e, i)} />
+                <ControllerDefines 
+                    type={i.type}
+                    value={data.customProps[i.name]}
+                    config={i.controllerConfig}
+                    onChange={(value) => {
+                        let localProps = data.customProps;
+                        localProps[i.name] = value;
+                        updateDynamicNode(localProps);
+                    }}
+                />
             {/each}
         {:else}
             <p>Node Not Loaded Yet</p>
         {/if}
-        <SelectInput
-            items={[
-                { name: 'Red', value: 'R' },
-                { name: 'Green', value: 'G' },
-                { name: 'Blue', value: 'B' },
-                { name: 'Alpha', value: 'A' }
-            ]}
-            on:change={e => updateDynamicNode({ channel: e.detail })} />
-            <!-- value={data.customProps?.channel || 'R'} -->
+        
         </div>
     <div class="handle-wrapper">
         <Handle type="source" position={Position.Bottom} />

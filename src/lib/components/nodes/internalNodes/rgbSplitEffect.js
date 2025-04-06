@@ -25,9 +25,13 @@ const nodeSetup = {
 		{
 			displayName: 'Amount',
 			name: 'amount',
-			type: 'number',
+			type: 'slider',
 			default: '1',
-			description: 'The amount of chromatic aberration'
+			description: 'The amount of chromatic aberration',
+			controllerConfig: {
+				min: 0,
+				max: 10
+			}
 		},
 		{
 			displayName: 'Mode',
