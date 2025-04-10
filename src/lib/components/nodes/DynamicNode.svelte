@@ -121,7 +121,6 @@
 }
 
 .settings {
-    background-color: var(--clr-bg);
     aspect-ratio: 1;
     border-radius: 99em;
     display: flex;
@@ -130,6 +129,9 @@
     color: var(--clr-text);
     border: none;
     cursor: pointer;
+    background-color: transparent;
+    border: solid 1px var(--clr-text-t100);
+    backdrop-filter: blur(1px);
 }
 
 button.clickable {

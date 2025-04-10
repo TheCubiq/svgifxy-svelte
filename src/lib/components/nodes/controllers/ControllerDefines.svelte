@@ -1,6 +1,7 @@
 <script lang="ts">
     import Slider from '../../controls/Slider.svelte';
     import Knob from '../../controls/Knob.svelte';
+    import Select from '../../controls/Select.svelte';
 
     export let type: string;
     export let value: any;
@@ -10,24 +11,25 @@
     const controllers: Record<string, any> = {
         'slider': Slider,
         'knob': Knob,
+        'select': Select,
         // Add more controllers here as needed
     };
 
     $: controller = controllers[type];
 
     // Helper to ensure numeric values
-    function handleSliderInput(event: CustomEvent) {
-        const numericValue = Number(event.detail);
-        onChange(numericValue);
+    function handleInput(event: CustomEvent) {
+        // const numericValue = Number(event.detail);
+        onChange(event.detail);
     }
 </script>
 
 {#if controller}
     <svelte:component 
         this={controller} 
-        value={Number(value)} 
+        value={value} 
         {config} 
-        on:input={handleSliderInput}
+        on:input={handleInput}
     />
 {:else}
     <input 

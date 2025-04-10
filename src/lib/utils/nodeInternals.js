@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-html = String.raw;
+const html = String.raw;
 
 const mod = (n, m) => ((n % m) + m) % m;
 

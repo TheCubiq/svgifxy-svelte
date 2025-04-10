@@ -1,23 +1,4 @@
 // @ts-nocheck
-// const nodeInputs = [
-//   {
-//     name: 'amount',
-//     type: 'number',
-//     description: 'The color of the flood',
-//     default: "1",
-//   },
-//   {
-//     name: 'mode',
-//     type: 'number',
-//     default: "1",
-//   },
-//   {
-//     name: 'deg',
-//     type: 'number',
-//     default: "90",
-//   }
-// ];
-
 const nodeSetup = {
 	displayName: 'Chromatic Aberration',
 	name: 'chromaticAberration',
@@ -36,8 +17,24 @@ const nodeSetup = {
 		{
 			displayName: 'Mode',
 			name: 'mode',
-			type: 'number',
+			type: 'select',
 			default: '1',
+			controllerConfig: {
+				options: [
+					{
+						name: 'RGB',
+						value: 1
+					},
+					{
+						name: 'RBG',
+						value: 2
+					},
+					{
+						name: 'GBR',
+						value: 3
+					}
+				]
+			},
 			description: 'The mode of chromatic aberration'
 		},
 		{
