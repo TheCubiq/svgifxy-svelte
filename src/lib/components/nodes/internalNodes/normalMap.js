@@ -6,7 +6,7 @@ const nodeSetup = {
   props: []
 }
 
-const normalMap = encodeURIComponent(html`
+const normalMap = encodeAsset(html`
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" color-interpolation-filters="sRGB">
     <g>
       <rect width="1" height="1" fill="black" />
@@ -29,7 +29,7 @@ const normalMap = encodeURIComponent(html`
       </radialGradient>
     </defs>
   </svg>
-`).replace(/\s+/g, ' ');
+`);
 
 const nodeLogic = ({id}) => identify(id, html`
   <feImage 

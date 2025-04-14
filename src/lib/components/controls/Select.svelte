@@ -51,13 +51,12 @@
 			isOpen = false;
 		}
 	}
-
-	onMount(() => {
-        // my gosh what an ai slop, they don't even know that this is fatal for svelte
-		document.addEventListener('click', handleClickOutside);
-		return () => document.removeEventListener('click', handleClickOutside);
-	});
 </script>
+
+<svelte:window
+	on:click={handleClickOutside}
+	on:keydown={handleKeydown}
+/>
 
 <div
 	class="select-wrapper"
@@ -154,6 +153,9 @@
 		cursor: pointer;
 		font-size: 0.8em;
 		color: var(--clr-text);
+		background: none;
+		border: none;
+    width: 100%;
 	}
 
 	.option:hover,

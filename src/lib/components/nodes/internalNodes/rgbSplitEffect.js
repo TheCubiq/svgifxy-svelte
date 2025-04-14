@@ -2,6 +2,7 @@
 const nodeSetup = {
 	displayName: 'Chromatic Aberration',
 	name: 'chromaticAberration',
+	inputs: ['source'],
 	props: [
 		{
 			displayName: 'Amount',
@@ -55,6 +56,7 @@ const rot = (axis, channel, mode) => axis * (mod(mode + channel, 3) - 1);
 
 const nodeLogic = (props, id, inputs) => {
 	let { amount = 1, mode = 1, deg = 20 } = props;
+	const {source = 'SourceGraphic'} = inputs;
 
 	mode = Number(mode);
 
@@ -66,7 +68,7 @@ const nodeLogic = (props, id, inputs) => {
 		html`
 			<!-- B -->
 			<feOffset
-				in="SourceGraphic"
+				in="__${source}__"
 				result="off-b"
 				dx="${amount * rot(x, 1, mode)}"
 				dy="${amount * rot(y, 1, mode)}"
@@ -80,7 +82,7 @@ const nodeLogic = (props, id, inputs) => {
 
 			<!-- G -->
 			<feOffset
-				in="SourceGraphic"
+				in="__${source}__"
 				result="off-g"
 				dx="${amount * rot(x, 0, mode)}"
 				dy="${amount * rot(y, 0, mode)}"
@@ -94,7 +96,7 @@ const nodeLogic = (props, id, inputs) => {
 
 			<!-- R -->
 			<feOffset
-				in="SourceGraphic"
+				in="__${source}__"
 				result="off-r"
 				dx="${amount * rot(x, -1, mode)}"
 				dy="${amount * rot(y, -1, mode)}"

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Handle, Position, useSvelteFlow, type NodeProps, type Node } from '@xyflow/svelte';
+    import { Handle, Position, useSvelteFlow, useHandleConnections, type NodeProps, type Node, useNodeConnections } from '@xyflow/svelte';
     import { anyToHex, rgb2hex } from '$lib/utils/commonUtils';
     import RightSidebar from '../RightSidebar.svelte';
     import CodeMirror from "svelte-codemirror-editor";
@@ -7,7 +7,7 @@
     import { oneDark } from '@codemirror/theme-one-dark';
     import { CodeIcon, HardDriveDownloadIcon } from 'lucide-svelte';
 
-    import feflood from './internalNodes/feflood.js?raw';
+    import initialEffect from './internalNodes/gaussianBlur.js?raw';
     import nodeInternals from '$lib/utils/nodeInternals.js?raw';
     import { onMount } from 'svelte';
 	import SelectInput from './controllers/SelectInput.svelte';
@@ -27,11 +27,24 @@
     let showSettings = false;
     let nodeSetup: any;
     let nodeInputs: any;
-    let nodeLogic = (s: any, id: any) => '';
+    let nodeInputHandles: string[] = [];
+    let nodeLogic = (s: any, id: any, inputs: any) => '';
+    
+    const connections = useNodeConnections({ handleType: 'target'});
+    let inputConnections: any[] = [] // todo: find type later
+    
+
+    const getConnectionObject = () => {
+        console.log(inputConnections, nodeInputHandles);
+        return Object.entries(inputConnections).reduce((acc: any, [key, value]: any, i) => {
+            acc[nodeInputHandles[i]] = value.source;
+            return acc;
+        }, {});        
+    }
 
     const updateDynamicNode = (props: any) => updateNodeData(id, { 
         customProps: props,
-        svgFilter: nodeLogic(props, id),	
+        svgFilter: nodeLogic(props, id, getConnectionObject()),	
     });
 
     const handleCompile = () => {
@@ -40,6 +53,7 @@
         nodeSetup = compiled.nodeSetup;
         nodeLogic = compiled.nodeLogic;
         nodeInputs = nodeSetup.props;
+        nodeInputHandles = nodeSetup.inputs ?? [];
 
         // todo: fix this mf
         const props = nodeSetup.props.reduce((acc: any, i: any) => { 
@@ -52,13 +66,18 @@
 
     const handleInput = (e: SvelteInputEvent, i: { name: string | number; }) => {
         let localProps = data.customProps;
+        console.log(localProps);
         localProps[i.name] = e.currentTarget.value;
-
         updateDynamicNode(localProps);
     };
+    
+    connections.subscribe((c) => {
+        inputConnections = c
+        if (c.length > 0) updateDynamicNode(data.customProps)
+    })
         
     onMount(() => {
-        updateNodeData(id, { scriptable: feflood, customProps: {} });
+        updateNodeData(id, { scriptable: initialEffect, customProps: {} });
     });
 </script>
 
@@ -82,6 +101,16 @@
 
 <div class="node">
     <div class="content">
+        <div class="handle-wrapper">
+            {#each nodeInputHandles as handle}
+                <Handle 
+                    type="target" 
+                    position={Position.Top} 
+                    id={handle}
+                />
+            {/each}
+        </div>
+        
         <div class="title-wrapper">
             <h3>{nodeSetup?.displayName || "Dynamic Node"}</h3>
             <button class="settings" on:click={() => showSettings = true}><CodeIcon size="1em"/></button>
@@ -143,5 +172,11 @@ button.clickable {
     border-radius: var(--corner-rad);
     pointer-events: auto;
     display: flex;
+}
+
+.handle-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
 }
 </style>
