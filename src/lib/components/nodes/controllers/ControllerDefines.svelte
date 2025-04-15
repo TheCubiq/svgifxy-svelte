@@ -2,6 +2,8 @@
     import Slider from '../../controls/Slider.svelte';
     import Knob from '../../controls/Knob.svelte';
     import Select from '../../controls/Select.svelte';
+    import Pan2DControl from '../../controls/Pan2DControl.svelte';
+    import FileInput from './FileInput.svelte';
 
     export let type: string;
     export let value: any;
@@ -12,6 +14,8 @@
         'slider': Slider,
         'knob': Knob,
         'select': Select,
+        'pan2d': Pan2DControl,
+        'file': FileInput,
         // Add more controllers here as needed
     };
 

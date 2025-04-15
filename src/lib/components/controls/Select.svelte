@@ -15,7 +15,7 @@
 
 	function handleSelect(option: { name: string; value: any }, index: number) {
 		selectedIndex = index;
-		dispatch('input', Number(option.value));
+		dispatch('input', option.value);
 		isOpen = false;
 	}
 
