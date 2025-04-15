@@ -105,6 +105,7 @@ export const createFilter = (id: string, filter: string, cssReady = false) => {
         </filter>
       </defs>
     </svg>`;
+  // <rect width="100%" height="100%" fill="none" filter="url(#${id})" />
 
   if (cssReady) {
     boilerplate = `url("data:image/svg+xml,${cssReadyEncode(boilerplate)}#${id}")`;

@@ -1,21 +1,54 @@
 <script lang="ts">
-	import { convertToSvgFilter, createFilter } from "$lib/utils/nodeUtils";
+  import { convertToSvgFilter, createFilter } from "$lib/utils/nodeUtils";
+  import { onMount } from "svelte";
 
   export let id: string;
   export let nodeData: any;
   export let resizable: boolean = false;
   export let bg: boolean = false;
+  export let cssCompile : boolean = false;
 
-  $: cssFilter = createFilter(id, convertToSvgFilter(id, nodeData), true)
+  export let processingInterval: number = 50;
+
+  let compiledFilter = '';
+  let updateInterval: number;
+  let lastNodeData = {};
+
+
+  const recompilePreviewSVG = () => {
+    const filterContent = convertToSvgFilter(id, nodeData);
+    compiledFilter = createFilter(id, filterContent, cssCompile);
+  }
+
+  // force recompile on cssCompile change
+  $: recompilePreviewSVG(cssCompile);
+
+  onMount(() => {
+    updateInterval = setInterval(() => {
+      if (lastNodeData !== nodeData) {
+        recompilePreviewSVG();
+        lastNodeData = nodeData;
+      }
+    }, processingInterval);
+
+    return () => {
+      clearInterval(updateInterval);
+    };
+  });
+
 </script>
 
 <div 
   class="color nodrag" 
-  style:--f={cssFilter}
   class:resizable
   class:bg
+  style:--f={cssCompile ? compiledFilter : `url(#${id})`}
 >
-
+<div class="content">
+  {#if !cssCompile}
+    {@html compiledFilter}
+  {/if}
+</div>
 </div>
 
 <style>
@@ -44,6 +77,16 @@
       position: absolute;
       inset: 0;
       backdrop-filter: var(--f);
+      /* display: none; */
     }
+
+    /* &:has(:not(.content))::before {
+      display: block;
+    } */
 	}
+
+  .content {
+    position: absolute;
+    inset: 0;
+  }
 </style>

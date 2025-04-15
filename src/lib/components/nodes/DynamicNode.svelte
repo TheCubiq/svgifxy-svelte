@@ -35,7 +35,6 @@
     
 
     const getConnectionObject = () => {
-        console.log(inputConnections, nodeInputHandles);
         return Object.entries(inputConnections).reduce((acc: any, [key, value]: any, i) => {
             acc[nodeInputHandles[i]] = value.source;
             return acc;
