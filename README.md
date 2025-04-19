@@ -1,38 +1,16 @@
-# sv
+# SVGiFXy
+> gosh, even the name is wip
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+![Svelte](https://img.shields.io/badge/svelte-%23f1413d.svg?style=for-the-badge&logo=svelte&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![xyflow](https://img.shields.io/badge/xyflow-%231A192B.svg?&style=for-the-badge&logo=xyflow&logoColor=white)
 
-## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
+<img style="max-width: 100%" alt="hero" src="https://github.com/user-attachments/assets/40cb5d71-a473-4a65-a39a-02ec56d9073f" />
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Features
 
-# create a new project in my-app
-npx sv create my-app
-```
+> [!NOTE]  
+> At the moment, most of the progress is being done in the side branches
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+> Everything in there is still super WIP so don't expect stuff to be working smoothly 😅 
