@@ -55,7 +55,6 @@
 	const handleDrag = (evt: GestureEvent) => {
 		if (!isDragging) return;
 		evt.preventDefault();
-		// console.log(evt.clientX, evt.clientY);
 		let { x, y } = getMousePos(evt);
 
 		x = (x - startPos.x) / size.width * 100

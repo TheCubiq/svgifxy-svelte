@@ -12,6 +12,7 @@
   --corner-rad: 0.25rem;
 
   color-scheme: light dark;
+  interpolate-size: allow-keywords;
 }
 
 @media (prefers-color-scheme: light) {
@@ -258,7 +259,7 @@ body {
         }
         :has(> &[data-handlepos="left"]) {
           right: unset;
-          transform: translateY(-50%);
+          transform: translateX(-50%);
           flex-direction: column;
         }
       }
