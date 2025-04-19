@@ -28,7 +28,7 @@
 
 	$: nodesData = useNodesData(findAllConnections(id, $allConnections));
 
-	let renderMode = 'css';
+	let renderMode = 'svg';
 
 	function handleRenderModeChange(e) {
 		renderMode = e.detail;

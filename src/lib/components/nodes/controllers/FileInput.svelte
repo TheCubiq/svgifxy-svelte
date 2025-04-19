@@ -1,21 +1,28 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onDestroy } from 'svelte';
     const dispatch = createEventDispatcher();
 
     export let value: string = '';
     export let config: any = {};
 
-    async function handleFileSelect(event: Event) {
+    let currentBlobUrl: string | null = null;
+
+    onDestroy(() => {
+        if (currentBlobUrl) {
+            URL.revokeObjectURL(currentBlobUrl);
+        }
+    });
+
+    const handleFileSelect = async(event: Event) => {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
         
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const dataUrl = e.target?.result as string;
-                dispatch('input', dataUrl);
-            };
-            reader.readAsDataURL(file);
+            if (currentBlobUrl) {
+                URL.revokeObjectURL(currentBlobUrl);
+            }
+            currentBlobUrl = URL.createObjectURL(file);
+            dispatch('input', currentBlobUrl);
         }
     }
 </script>
