@@ -1,23 +1,32 @@
 <script lang="ts">
-	import { Handle, Position, useEdges, useNodesData, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
-	import Select from '../Select.svelte';
+	import { Handle, Position, useEdges, useNodesData, useSvelteFlow, type NodeProps, type Node} from '@xyflow/svelte';
+	import Select from './controllers/Select.svelte';
 	import { findAllConnections } from '$lib/utils/nodeUtils';
-	import SvgPreview from '../SvgPreview.svelte';
+	import SvgPreview from './controllers/SvgPreview.svelte';
 	import { spring, tweened } from 'svelte/motion';
-	import { getMousePos, lerp, mod, type GestureEvent } from '$lib/utils/commonUtils';
+	import { getMousePos, lerp, mod, roundTo, type GestureEvent } from '$lib/utils/commonUtils';
 	import { Mouse } from 'lucide-svelte';
 	import { cubicOut } from 'svelte/easing';
 	import { onDestroy, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
-	type $$Props = NodeProps;
+
+	type TurbulenceNode = Node<{
+		baseFrequency: string;
+		numOctaves: number;
+		seed: number;
+		type: string;
+	}>
+	type $$Props = NodeProps<TurbulenceNode>;
 	export let id: $$Props['id'];
 	export let data: $$Props['data'];
 
-	const {baseFrequency, numOctaves, seed, type} = data;
+	// const {baseFrequency, numOctaves, seed, type} = data;
 
 	const { updateNodeData } = useSvelteFlow();
 
 	$: nodesData = useNodesData(id);
+
+	// $: console.log($nodesData);
 
 	let isDragging = false;
 
@@ -33,7 +42,9 @@
 	}
 	
 	let size: DOMRectDimensions = { x: 0, y: 0, width: 0, height: 0};
-		
+	
+	// $: console.log(size)
+	
 	let dragArea: HTMLDivElement;
 	
 	const dotPos = writable({ x: 50, y: 50 });
@@ -48,6 +59,9 @@
 
 		x = (x - startPos.x) / size.width * 100
 		y = (y - startPos.y) / size.height * 100
+
+		x = Math.min(100, x);
+		y = Math.min(100, y);
 
 		let delta = {
       x: x - lastCoords.x,
@@ -67,6 +81,18 @@
 	}
 
 	const handleMouseDown = (evt: GestureEvent) => {
+		$dotPos = {
+			x: (
+				lerp(100, 0, 
+				spaceSeparated(data.baseFrequency) * 100
+			)	
+			),
+			y: (
+				lerp(100, 0, 
+				spaceSeparated(data.baseFrequency,1) * 100
+			)
+			)
+		}
 		size = dragArea.getBoundingClientRect();
 		const pos = getMousePos(evt);
 		isDragging = true;
@@ -89,13 +115,15 @@
 
 
 	const cssPerc = (val: number) => `${
-		val
+		roundTo(
+			lerp(100, 0, val * 100)
+		)
 		// mod(val, 100)
 	}%`;
 
 
 	const applyMomentum = () => {
-    const friction = 0.95;
+    const friction = 0.90;
     
     function animate() {
       if (Math.abs(velocity.x) > 0.05 || Math.abs(velocity.y) > 0.05) {
@@ -105,8 +133,8 @@
         };
         
         dotPos.update(pos => ({
-          x: pos.x + velocity.x,
-          y: pos.y + velocity.y
+          x: Math.min(100, pos.x + velocity.x),
+          y: Math.min(100, pos.y + velocity.y)
         }));        
         animationFrame = requestAnimationFrame(animate);
       }
@@ -120,14 +148,30 @@
   });
 
 	dotPos.subscribe((pos) => {
+
+		// console.log(pos);
+
 		pos = {
 			// x: pos.x / 1000,
-			x: lerp(.1, 0, pos.x / 100),
+			x: 
+			roundTo(
+				Math.max(0, lerp(.01, 0, pos.x / 100)),
+			),
 			// y: pos.y / 1000
-			y: lerp(.1, 0, pos.y / 100)
+			y: 
+			roundTo(
+				Math.max(0, lerp(.01, 0, pos.y / 100))
+			),
 		}
 		updateNodeData(id, { baseFrequency: `${pos.x} ${pos.y}` });
 	});
+
+	const spaceSeparated = (str: string, pos: number = 0) => {
+		// console.log(str);
+		str = (str || '').trim();
+		const arr = str.split(' ');
+		return Number(arr[pos] || str);
+	}
 
 </script>
 
@@ -146,27 +190,27 @@
 
 		<Select
 			onChange={(evt) => updateNodeData(id, { type: evt.currentTarget.value })}
-			value={type}
-			options={['fractalNoise', 'turbulence']}
+			value={data.type}
+			options={['turbulence', 'fractalNoise']}
 		/>
 
 		<input
-			type="number"
+			type="text"
 			placeholder="baseFrequency"
-			value={baseFrequency}
+			value={data.baseFrequency}
 			step="0.01"
 			on:input={(evt) => updateNodeData(id, { baseFrequency: evt.currentTarget.value })}
 		/>
 		<input
 			type="number"
 			placeholder="numOctaves"
-			value={numOctaves}
+			value={data.numOctaves || ''}
 			on:input={(evt) => updateNodeData(id, { numOctaves: evt.currentTarget.value })}
 		/>
 		<input
 			type="number"
 			placeholder="seed"
-			value={seed}
+			value={data.seed || ''}
 			on:input={(evt) => updateNodeData(id, { seed: evt.currentTarget.value })}
 		/>
 
@@ -178,8 +222,8 @@
 			bind:this={dragArea}
 			on:mousedown|preventDefault={handleMouseDown}
 			on:touchstart|preventDefault={handleMouseDown}
-			style:--_x={cssPerc($dotPos.x)}
-			style:--_y={cssPerc($dotPos.y)}
+			style:--_x={cssPerc(spaceSeparated(data.baseFrequency))}
+			style:--_y={cssPerc(spaceSeparated(data.baseFrequency,1))}
 			>
 			<!-- style:--_x={cssPerc($dotPos.x / size.width * 100)} -->
 			<!-- style:--_y={cssPerc($dotPos.y / size.height * 100)} -->

@@ -1,36 +1,16 @@
 import type { Connection, Edge, Node } from '@xyflow/svelte';
 import { getRandomPosition, toCamelCase, toKebabCase } from './commonUtils';
-import { js2xml } from 'xml-js';
+import { js2xml, xml2js } from 'xml-js';
 
 // Helper function to create node object
-const createNode = (type: string, attributes: FilterAttributes, idx = 0): Node => {
-  // const data = { ...attributes._attributes };
-
-  const {_attributes: data, ...nested} = attributes;
-
-  // delete data.result; // Remove result from data as it becomes id
-
-  const typeFormatted = type
-    .toLowerCase()    
-    .replace('fe', '')
-  ;
-
-  let heya = {}
-  if (Object.keys(nested).length > 0) {
-    heya = {_nested: nested}
-  }
-
-  const customResult = `${typeFormatted}${idx+1}`
+const createNode = (type: string, attributes: FilterAttributes): Node => {
+  const data = { ...attributes };
+  delete data.result; // Remove result from data as it becomes id
 
   return {
-    id: data.result || customResult,
-    type: "dynamicType",
-    data: {
-      filterType: type,
-      ...data,
-      result: data.result || customResult,
-      ...heya
-    },
+    id: attributes.result || '',
+    type,
+    data,
     position: getRandomPosition()
   };
 };
@@ -44,46 +24,27 @@ const transformAttributes = (attributes: FilterAttributes): Record<string, any> 
   return transformed;
 };
 
-const getFilterNodes = (filter: Record<string, any>): FilterNode => {
-  // todo: get rid of filter: any
-  
-  // if wrapped in svg
-  if (filter.svg?.filter) {
-    return filter.svg.filter;
-  }
-
-  // if wrapped in filter
-  if (filter.filter) {
-    return filter.filter;
-  }
-
-  // if passed directly
-  return filter;
-}
-
-export const transformFilter = (objFilterRaw: FilterInputRaw): Node[] => {
+export const transformFilter = (objFilterRaw: FilterInput): Node[] => {
   const nodes: Node[] = [];
-
-  const filter = getFilterNodes(objFilterRaw);
-
-  // console.log(objFilterRaw)
+  const filter = objFilterRaw.filter;
 
   // Process all filter elements
   Object.entries(filter).forEach(([key, value]) => {
-    if (key.startsWith('_comment')) return;
-    if (Array.isArray(value)) {
-      value.forEach((item, idx) => {
-        nodes.push(createNode(key, item, idx));
-      });
-    } else if (value && '_attributes' in value) {
-      nodes.push(createNode(key, value));
+    if (key.startsWith('fe')) {
+      if (Array.isArray(value)) {
+        value.forEach(item => {
+          nodes.push(createNode(key, item._attributes));
+        });
+      } else if (value && '_attributes' in value) {
+        nodes.push(createNode(key, value._attributes));
+      }
     }
   });
   
   return nodes;
 };
 
-export const findAllConnections = (targetId: string, connections: Edge[]) => {
+export const findAllConnections = (targetId: string, connections: Edge[], addTarget = false) => {
   const connectedIds = new Set<string>();
   
   const findSourceNodes = (currentId: string) => {
@@ -102,7 +63,11 @@ export const findAllConnections = (targetId: string, connections: Edge[]) => {
   // Start the recursive search
   findSourceNodes(targetId);
 
-  console.log(connectedIds);
+  // console.log(connectedIds);
+
+  if (addTarget) {
+    connectedIds.add(targetId);
+  }
   
   // Convert Set to Array and return
   return Array.from(connectedIds).reverse();
@@ -140,6 +105,7 @@ export const createFilter = (id: string, filter: string, cssReady = false) => {
         </filter>
       </defs>
     </svg>`;
+  // <rect width="100%" height="100%" fill="none" filter="url(#${id})" />
 
   if (cssReady) {
     boilerplate = `url("data:image/svg+xml,${cssReadyEncode(boilerplate)}#${id}")`;
@@ -149,26 +115,37 @@ export const createFilter = (id: string, filter: string, cssReady = false) => {
 };
 
 export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
-  const filterOutput: any[] = [];
+  const filterOutput = { elements: [] };
 
   if (!Array.isArray(nodesData)) {
     nodesData = [nodesData];
   }
 
   nodesData.forEach((node) => {
-    let element = {
-      type: 'element',
-      name: node.type,
-      attributes: {
-        result: node.id,
-        ...node.data
-      }
-    };
 
-    filterOutput.push(element);
+    let element = [{}];
+
+    if (node.type === 'dynamic') {
+      const elements = xml2js(node.data.svgFilter as string || '');
+      element = elements.elements || [];
+    } else { 
+      element = [{
+        type: 'element',
+        name: node.type,
+        attributes: {
+          result: node.id,
+          ...node.data
+        }
+      }];
+    }
+
+    filterOutput.elements.push(...element);
   });
 
-  return js2xml({elements: filterOutput}, { spaces: 2 });
+  // console.log(filterOutput);
+  
+
+  return js2xml(filterOutput, { spaces: 2 });
 };
 
 export const getSource = (connection: Connection[]) => {

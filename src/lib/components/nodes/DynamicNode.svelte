@@ -1,93 +1,181 @@
 <script lang="ts">
-	import { Handle, Position, useSvelteFlow, type NodeProps } from '@xyflow/svelte';
-	import { anyToHex, rgb2hex } from '$lib/utils/commonUtils';
-	import { limitedConnect } from '$lib/utils/nodeUtils';
-	type $$Props = NodeProps;
-	export let id: $$Props['id'];
-	export let data: $$Props['data'];
+    import { Handle, Position, useSvelteFlow, useHandleConnections, type NodeProps, type Node, useNodeConnections } from '@xyflow/svelte';
+    import { anyToHex, rgb2hex } from '$lib/utils/commonUtils';
+    import RightSidebar from '../RightSidebar.svelte';
+    import CodeMirror from "svelte-codemirror-editor";
+    import { javascript } from "@codemirror/lang-javascript";
+    import { oneDark } from '@codemirror/theme-one-dark';
+    import { CodeIcon, HardDriveDownloadIcon } from 'lucide-svelte';
 
-	const { updateNodeData } = useSvelteFlow();
+    import initialEffect from './internalNodes/gaussianBlur.js?raw';
+    import nodeInternals from '$lib/utils/nodeInternals.js?raw';
+    import { onMount } from 'svelte';
+	import SelectInput from './controllers/SelectInput.svelte';
+    import ControllerDefines from './controllers/ControllerDefines.svelte';
 
-	// $: {
-	// 	console.log(data);
-	// }
+    type DynamicNode = Node<{
+        scriptable: string;
+        svgFilter: string;
+        customProps: Record<string, any>;
+    }>
+    type $$Props = NodeProps<DynamicNode>;
+    export let id: $$Props['id'];
+    export let data: $$Props['data'];
+    
+    const { updateNodeData } = useSvelteFlow();
 
-  const getControllerAttributes = (data:any[]) => {
+    let showSettings = false;
+    let nodeSetup: any;
+    let nodeInputs: any;
+    let nodeInputHandles: string[] = [];
+    let nodeLogic = (s: any, id: any, inputs: any) => '';
+    
+    const connections = useNodeConnections({ handleType: 'target'});
+    let inputConnections: any[] = [] // todo: find type later
+    
 
-    console.log(data);
+    const getConnectionObject = () => {
+        return Object.entries(inputConnections).reduce((acc: any, [key, value]: any, i) => {
+            acc[nodeInputHandles[i]] = value.source;
+            return acc;
+        }, {});        
+    }
 
-    // const filterType = data.filterType || 'unknown';
-
-    // const newData = Object.entries(data).map(([key, value]) => {
-    //   return { key, value };
-    // });
-
-    // todo: remove hidden keys
-    const hiddenKeys = ['filterType', 'in', 'in2', 'result', '_nested'];
-    const newData = Object.entries(data).filter(([key, value]) => !hiddenKeys.includes(key)).map(([key, value]) => {
-      return { key, value };
+    const updateDynamicNode = (props: any) => updateNodeData(id, { 
+        customProps: props,
+        svgFilter: nodeLogic(props, id, getConnectionObject()),	
     });
 
-    // console.log(newData)
-    return newData;
-  }
+    const handleCompile = () => {
+        const wrapped = `${nodeInternals}; ${data.scriptable}; return {nodeSetup, nodeLogic};`;
+        const compiled = new Function(wrapped)();
+        nodeSetup = compiled.nodeSetup;
+        nodeLogic = compiled.nodeLogic;
+        nodeInputs = nodeSetup.props;
+        nodeInputHandles = nodeSetup.inputs ?? [];
 
+        // todo: fix this mf
+        const props = nodeSetup.props.reduce((acc: any, i: any) => { 
+            acc[i.name] = i.name in data.customProps ? data.customProps[i.name] : i.default;
+            return acc;
+        }, {});
+
+        updateDynamicNode(props);
+    };
+
+    const handleInput = (e: SvelteInputEvent, i: { name: string | number; }) => {
+        let localProps = data.customProps;
+        console.log(localProps);
+        localProps[i.name] = e.currentTarget.value;
+        updateDynamicNode(localProps);
+    };
+    
+    connections.subscribe((c) => {
+        inputConnections = c
+        if (c.length > 0) updateDynamicNode(data.customProps)
+    })
+        
+    onMount(() => {
+        updateNodeData(id, { scriptable: initialEffect, customProps: {} });
+    });
 </script>
 
+<RightSidebar 
+    bind:show={showSettings} 
+    title={`Edit ${nodeSetup?.displayName || 'Node'}`}
+>
+    <div>
+        <h3>Node Script</h3>
+        <p>Edit the code to modify node behavior</p>
+    </div>
+
+    <CodeMirror bind:value={data['scriptable']} lang={javascript()} theme={oneDark} />
+    
+    <svelte:fragment slot="overlay">
+        <button class="clickable" on:click={handleCompile}>
+            <HardDriveDownloadIcon size="1.2em" />
+        </button>
+    </svelte:fragment>
+</RightSidebar>
+
 <div class="node">
-	<div class="content">
-		<h3>{data.filterType}</h3>
+    <div class="content">
+        <div class="handle-wrapper">
+            {#each nodeInputHandles as handle}
+                <Handle 
+                    type="target" 
+                    position={Position.Top} 
+                    id={handle}
+                />
+            {/each}
+        </div>
+        
+        <div class="title-wrapper">
+            <h3>{nodeSetup?.displayName || "Dynamic Node"}</h3>
+            <button class="settings" on:click={() => showSettings = true}><CodeIcon size="1em"/></button>
+        </div>
+        {#if nodeSetup}
+            {#each nodeInputs as i}
+                <ControllerDefines 
+                    type={i.type}
+                    value={data.customProps[i.name]}
+                    config={i.controllerConfig}
+                    onChange={(value) => {
+                        let localProps = data.customProps;
+                        localProps[i.name] = value;
+                        updateDynamicNode(localProps);
+                    }}
+                />
+            {/each}
+        {:else}
+            <p>Node Not Loaded Yet</p>
+        {/if}
+        
+        </div>
+    <div class="handle-wrapper">
+        <Handle type="source" position={Position.Bottom} />
+    </div>
 
-		<div class="handle-wrapper">
-			<Handle class="handle" type="target" id="in" position={Position.Top} />
-			<!-- isConnectable={limitedConnect($c_in1)} -->
-			<!-- isConnectable={limitedConnect($c_in2)} -->
-			<Handle class="handle" type="target" id="in2" position={Position.Top} />
-		</div>
-
-		<ul>
-			{#each getControllerAttributes(data) as attr}
-				<li>
-					<div class="handle-wrapper">
-						<Handle
-							class="handle"
-							type="target"
-							id={'h' + attr.key}
-							isConnectable={true}
-							position={Position.Left}
-						/>
-					</div>
-					<label for={attr.key}>{attr.key}:</label>
-
-					<input
-						type="text"
-						value={attr.value}
-						id={attr.key}
-						on:input={(evt) => updateNodeData(id, { [attr.key]: evt.currentTarget.value })}
-					/>
-
-				</li>
-			{/each}
-		</ul>
-	</div>
-	<Handle type="source" position={Position.Bottom} />
 </div>
-
+    
 <style>
-	ul {
-		list-style: none;
-		display: flex;
-		gap: 0.6em;
-		flex-direction: column;
-	}
+.node {
+    min-width: 5rem;
+}
 
-	li {
-		background-color: var(--clr-bg-t600);
-		display: flex;
-		gap: 0.3em;
-		flex-direction: column;
-		padding: 0.5em;
-		border-radius: 0.3em;
-		position: relative;
-	}
+.title-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.settings {
+    aspect-ratio: 1;
+    border-radius: 99em;
+    display: flex;
+    align-self: center;
+    padding: 0.4em;
+    color: var(--clr-text);
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    border: solid 1px var(--clr-text-t100);
+    backdrop-filter: blur(1px);
+}
+
+button.clickable {
+    cursor: pointer;
+    background-color: var(--clr-text-t100);
+    color: var(--clr-text);
+    border: none;
+    padding: 0.75em;
+    border-radius: var(--corner-rad);
+    pointer-events: auto;
+    display: flex;
+}
+
+.handle-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
 </style>
