@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const nodeSetup = {
   displayName: 'Image',
   name: 'image',
@@ -33,7 +35,7 @@ const nodeLogic = ({imageData = '', preserveAspectRatio = 'none'}, id) => {
   
   return `
     <feImage
-      result="__${id}__"
+      result="${id}"
       href="${imageData}"
       preserveAspectRatio="${preserveAspectRatio} meet"
       x="0"

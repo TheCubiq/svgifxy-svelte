@@ -31,11 +31,11 @@ const normalMap = encodeAsset(html`
   </svg>
 `);
 
-const nodeLogic = ({id}) => identify(id, html`
+const nodeLogic = (props, id) => html`
   <feImage 
-    result="__${id}__"
+    result="${id}"
     crossorigin="anonymous" 
     href="data:image/svg+xml, ${normalMap}" 
-    preserveAspectRatio="none meet" 
+    preserveAspectRatio="xMidYMid slice" 
   />
-`);
+`;

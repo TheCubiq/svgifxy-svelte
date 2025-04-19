@@ -21,12 +21,11 @@ const nodeSetup = {
 }
 
 
-const nodeLogic = (inputs) => {
+const nodeLogic = (props, id) => {
   const {
-    id,
     'flood-color': floodColor,
     'flood-opacity': floodOpacity,
-  } = inputs;
+  } = props;
 
   return `<feFlood result="${id}" flood-color="${floodColor}" flood-opacity="${floodOpacity / 100}" />`
 };
