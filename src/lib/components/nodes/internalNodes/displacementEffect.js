@@ -44,20 +44,16 @@ const nodeSetup = {
 
 const nodeLogic = (props, id, inputs) => {
   const { scale = 10, xChannelSelector = 'R', yChannelSelector = 'G' } = props;
-  const { source = 'SourceGraphic', map } = inputs;
+  const { source = 'SourceGraphic', map = 'SourceGraphic' } = inputs;
 
-  if (!map) return '';
-
-  return identify(
-		id,
-		html`
+  return html`
     <feDisplacementMap
-      in="__${source}__"
-      in2="__${map}__"
+      in="${source}"
+      in2="${map}"
       scale="${scale}"
       xChannelSelector="${xChannelSelector}"
       yChannelSelector="${yChannelSelector}"
-      result="__${id}__"
+      result="${id}"
     />
-  `);
+  `;
 };
