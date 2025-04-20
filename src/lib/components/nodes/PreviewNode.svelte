@@ -56,7 +56,7 @@
 		<div>Nothing to preview</div>
 	{:else}
 		<div class="wrap">
-			<SvgPreview {id} nodeData={$nodesData} resizable bg cssCompile={renderMode === 'css'} />
+			<SvgPreview {id} nodeData={$nodesData} resizable bg cssCompile={renderMode === 'css'} floatable={true} />
 		</div>
 	{/if}
 </div>

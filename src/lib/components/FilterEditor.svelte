@@ -126,6 +126,9 @@
 		<div use:createPortal={'right-sidebar'} class="portal">
 			<!-- Portal Placeholder -->
 		</div>
+		<div use:createPortal={'floating-preview'} class="portal">
+			<!-- Floating Preview Portal Placeholder -->
+		</div>
 </div>
 
 <style>

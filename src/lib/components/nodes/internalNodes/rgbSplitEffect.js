@@ -27,7 +27,7 @@ const nodeSetup = {
 						value: 1
 					},
 					{
-						name: 'RBG',
+						name: 'BRG',
 						value: 2
 					},
 					{

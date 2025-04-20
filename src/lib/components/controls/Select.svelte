@@ -12,6 +12,7 @@
 	let isOpen = false;
 	let selectedIndex = config.options.findIndex((opt) => opt.value === value);
 	let containerRef: HTMLDivElement;
+	let hasFocus = false; // Track focus state
 
 	function handleSelect(option: { name: string; value: any }, index: number) {
 		selectedIndex = index;
@@ -19,8 +20,10 @@
 		isOpen = false;
 	}
 
+	$: console.log("hasFocus", hasFocus);
+
 	function handleKeydown(event: KeyboardEvent) {
-        // this is ai slop, ill fix it later
+		if (!hasFocus) return; // Only handle if focused
 		switch (event.key) {
 			case 'ArrowDown':
 				event.preventDefault();
@@ -53,9 +56,9 @@
 	}
 </script>
 
+<!-- Remove global keydown handler -->
 <svelte:window
 	on:click={handleClickOutside}
-	on:keydown={handleKeydown}
 />
 
 <div
@@ -68,11 +71,13 @@
 	aria-haspopup="listbox"
 	aria-label="Select an option"
 	on:keydown={handleKeydown}
->
+	>
 	<button
-		type="button"
-		class="selected-option"
-		on:click={() => (isOpen = !isOpen)}
+	type="button"
+	class="selected-option"
+		on:click={() => isOpen = !isOpen}
+		on:focus={() => hasFocus = true}
+		on:blur={() => hasFocus = false}
 		aria-label={config.options[selectedIndex]?.name || 'Select option'}
 	>
 		<span>{config.options[selectedIndex]?.name || 'Select option'}</span>

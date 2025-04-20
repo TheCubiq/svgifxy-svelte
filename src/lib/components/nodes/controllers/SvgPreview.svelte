@@ -1,19 +1,28 @@
 <script lang="ts">
   import { convertToSvgFilter, createFilter } from "$lib/utils/nodeUtils";
   import { onMount } from "svelte";
+  import { portal } from "$lib/utils/portal";
+  import { MonitorUpIcon, MonitorDownIcon } from "lucide-svelte";
+  import { onDestroy } from "svelte";
+  import FloatingWindow from "$lib/components/FloatingWindow.svelte";
 
   export let id: string;
   export let nodeData: any;
   export let resizable: boolean = false;
   export let bg: boolean = false;
   export let cssCompile : boolean = false;
+  export let floatable: boolean = false;
 
   export let processingInterval: number = 50;
 
   let compiledFilter = '';
   let updateInterval: number;
   let lastNodeData = {};
+  let isFloating = false;
 
+  function toggleFloating() {
+    isFloating = !isFloating;
+  }
 
   const recompilePreviewSVG = () => {
     const filterContent = convertToSvgFilter(id, nodeData);
@@ -38,18 +47,26 @@
 
 </script>
 
-<div 
-  class="color nodrag" 
-  class:resizable
-  class:bg
-  style:--f={cssCompile ? compiledFilter : `url(#${id})`}
+<FloatingWindow
+  floating={isFloating}
+  portalId="floating-preview"
+  title="SVG Preview"
+  onToggle={toggleFloating}
+  floatable={floatable}
 >
-<div class="content">
-  {#if !cssCompile}
-    {@html compiledFilter}
-  {/if}
-</div>
-</div>
+  <div 
+    class="color nodrag"
+    class:resizable
+    class:bg
+    style:--f={cssCompile ? compiledFilter : `url(#${id})`}
+  >
+    <div class="content">
+      {#if !cssCompile}
+        {@html compiledFilter}
+      {/if}
+    </div>
+  </div>
+</FloatingWindow>
 
 <style>
 	.color {
@@ -84,7 +101,28 @@
       display: block;
     } */
 	}
-
+  .floating-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.2em;
+  }
+  .pop-btn {
+    background: transparent;
+    border: none;
+    color: var(--clr-text, #fff);
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+    transition: background 0.2s;
+  }
+  .pop-btn:hover {
+    background: var(--clr-text-t100, #333);
+  }
+  .floating-preview-window {
+    /* see inline style above */
+  }
   .content {
     position: absolute;
     inset: 0;
