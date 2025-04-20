@@ -1,6 +1,6 @@
 import type { Connection, Edge, Node } from '@xyflow/svelte';
 import { getRandomPosition, toCamelCase, toKebabCase } from './commonUtils';
-import { js2xml } from 'xml-js';
+import { js2xml, xml2js } from 'xml-js';
 
 // Helper function to create node object
 const createNode = (type: string, attributes: FilterAttributes): Node => {
@@ -105,6 +105,7 @@ export const createFilter = (id: string, filter: string, cssReady = false) => {
         </filter>
       </defs>
     </svg>`;
+  // <rect width="100%" height="100%" fill="none" filter="url(#${id})" />
 
   if (cssReady) {
     boilerplate = `url("data:image/svg+xml,${cssReadyEncode(boilerplate)}#${id}")`;
@@ -121,17 +122,28 @@ export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
   }
 
   nodesData.forEach((node) => {
-    let element = {
-      type: 'element',
-      name: node.type,
-      attributes: {
-        result: node.id,
-        ...node.data
-      }
-    };
 
-    filterOutput.elements.push(element);
+    let element = [{}];
+
+    if (node.type === 'dynamic') {
+      const elements = xml2js(node.data.svgFilter as string || '');
+      element = elements.elements || [];
+    } else { 
+      element = [{
+        type: 'element',
+        name: node.type,
+        attributes: {
+          result: node.id,
+          ...node.data
+        }
+      }];
+    }
+
+    filterOutput.elements.push(...element);
   });
+
+  // console.log(filterOutput);
+  
 
   return js2xml(filterOutput, { spaces: 2 });
 };

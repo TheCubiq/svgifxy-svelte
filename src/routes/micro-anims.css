@@ -1,0 +1,32 @@
+.lucide-maximize-2 {
+  --_t: 0px;
+  --_h: 0px;
+  --_tc: calc(var(--_t) - var(--_h));
+  
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transition-duration: .15s;
+    --_h: 2px;
+  }
+
+  &.state-on {
+    --_t: 12px;
+  }
+
+
+  > * {
+    transition: inherit;
+  }
+
+  :nth-child(1 of line),
+  :nth-child(1 of polyline) {
+		transform: translate( calc(var(--_tc) * -1), var(--_tc));
+	}
+
+  :nth-child(2 of line),
+  :nth-child(2 of polyline) {
+    transform: translate( var(--_tc), calc(var(--_tc) * -1));
+  }
+
+}

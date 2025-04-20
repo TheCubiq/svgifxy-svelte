@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope');
+@import 'filters.css';
+@import 'micro-anims.css';
 
 :root {
   font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
@@ -10,8 +12,7 @@
   --corner-rad: 0.25rem;
 
   color-scheme: light dark;
-
-  --ftr-glass: brightness(0.9) saturate(2) blur(20px);
+  interpolate-size: allow-keywords;
 }
 
 @media (prefers-color-scheme: light) {
@@ -122,6 +123,7 @@ body {
     background-repeat: repeat;
     background-image: url(/noise-light.png);
     opacity: 0.3;
+    pointer-events: none;
   }
 }
 
@@ -129,6 +131,20 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: .3rem
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--clr-text-t100);
+  border-radius: 99em;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 9999px;
 }
 
 
@@ -150,6 +166,14 @@ body {
       background: transparent;
     }
 
+}
+
+.ͼo {
+  background: none;
+
+  .cm-gutters {
+    background: none;
+  }
 }
 
   .node {
@@ -192,15 +216,26 @@ body {
       gap: 0.5em;
     }
 
+    .svelte-flow__handle {
+      --_handle-size: .8em;
+      display: flex;
+      height: var(--_handle-size);
+      width: var(--_handle-size);
+      border-radius: 50%;
+
+      --xy-handle-background-color: var(--clr-bg);
+      --xy-handle-border-color: var(--clr-text-t200);
+    }
 
     .handle-wrapper {
       display: flex;
       justify-content: space-around;
+      padding: .25em;
       position: absolute;
       inset: 0;
       pointer-events: none;
 
-      [class *="svelte-flow__handle"] {
+      .svelte-flow__handle {
         position: relative;
         top: 0;
         left: 0;
@@ -214,7 +249,7 @@ body {
           transform: translateY(-50%);
         }
         :has(> &[data-handlepos="bottom"]) {
-          bottom: unset;
+          top: unset;
           transform: translateY(50%);
         }
         :has(> &[data-handlepos="right"]) {
@@ -224,7 +259,7 @@ body {
         }
         :has(> &[data-handlepos="left"]) {
           right: unset;
-          transform: translateY(-50%);
+          transform: translateX(-50%);
           flex-direction: column;
         }
       }

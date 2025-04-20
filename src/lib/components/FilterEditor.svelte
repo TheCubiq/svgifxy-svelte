@@ -9,21 +9,15 @@
 		SvelteFlowProvider
 	} from '@xyflow/svelte';
 	import { writable } from 'svelte/store';
-	import GaussianBlurNode from './nodes/GaussianBlurNode.svelte';
-	import FloodNode from './nodes/FloodNode.svelte';
-	import SourceGraphicNode from './nodes/SourceGraphicNode.svelte';
-	import PreviewNode from './nodes/PreviewNode.svelte';
-	import TurbulenceNode from './nodes/TurbulenceNode.svelte';
 	import { xml2js, type ElementCompact } from 'xml-js';
 
 	import type { Node } from '@xyflow/svelte';
-	import BlendNode from './nodes/BlendNode.svelte';
 	import { transformFilter } from '../utils/nodeUtils';
-	import DisplacementNode from './nodes/DisplacementNode.svelte';
-	import ConvolveMatrix from './nodes/ConvolveMatrix.svelte';
 	import { getRandomPosition } from '$lib/utils/commonUtils';
 	import Sidebar from './Sidebar.svelte';
 	import { dndType } from '$lib/stores';
+	import { xyFilterNodes as nodeTypes } from './_nodes';
+	import { createPortal } from '$lib/utils/portal';
 
 	const { screenToFlowPosition } = useSvelteFlow();
 
@@ -52,7 +46,7 @@
 
   const nodes = writable(
     [
-			...transformFilter(objFilterRaw as FilterInput),
+			// ...transformFilter(objFilterRaw as FilterInput),
 			// ...additionalNodes
     ]
   );
@@ -77,19 +71,7 @@
 			id: 'e3'
 		}
 	];
-	const edges = writable(initialEdges);
-
-	const nodeTypes: NodeTypes = {
-		feFlood: FloodNode,
-		feBlend: BlendNode,
-		feGaussianBlur: GaussianBlurNode,
-		feConvolveMatrix: ConvolveMatrix,
-		feDisplacementMap: DisplacementNode,
-		feTurbulence: TurbulenceNode,
-		preview: PreviewNode,
-		feOffset: OffsetNode,
-		sourceGraphic: SourceGraphicNode
-	};
+	const edges = writable(initialEdges);	
 
 	const onDragOver = (event: DragEvent) => {
 		event.preventDefault();
@@ -97,6 +79,13 @@
 		if (event.dataTransfer) {
 			event.dataTransfer.dropEffect = 'move';
 		}
+	};
+
+	const handleModalAction = (e: CustomEvent) => {
+		console.log(e);
+		// if (e.detail.action === 'close') {
+		// 	nodes.update((n) => n.filter((node) => node.id !== e.detail.id));
+		// }
 	};
 
 	const handleAddNode = (e: DragEvent) => {
@@ -119,11 +108,11 @@
 </script>
 
 <div class="editor">
+	<!-- fitView -->
 		<SvelteFlow
 			{nodes}
 			{edges}
 			{nodeTypes}
-			fitView
 			proOptions={{ hideAttribution: true }}
 			maxZoom={5}
 			on:drop={handleAddNode}
@@ -133,6 +122,13 @@
 		</SvelteFlow>
 
 		<Sidebar {nodeTypes} on:addNode={handleAddNode} />
+		
+		<div use:createPortal={'right-sidebar'} class="portal">
+			<!-- Portal Placeholder -->
+		</div>
+		<div use:createPortal={'floating-preview'} class="portal">
+			<!-- Floating Preview Portal Placeholder -->
+		</div>
 </div>
 
 <style>

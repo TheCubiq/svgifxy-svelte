@@ -9,12 +9,15 @@ interface FilterElement {
   _text?: string;
 }
 
-interface FilterInput {
-  filter: {
-    _attributes?: FilterAttributes;
-    [key: string]: FilterElement | FilterElement[] | any;
-  };
+interface FilterNode {
+  _attributes?: FilterAttributes;
+  [key: string]: FilterElement | FilterElement[] | any;
 }
+
+type FilterInputRaw = 
+| { svg: { filter: FilterNode } }
+| { filter: FilterNode }
+| FilterNode;
 
 interface Position {
   x: number;
@@ -27,3 +30,5 @@ interface Node {
   data: Record<string, any>;
   position: Position;
 }
+
+type SvelteInputEvent = Event & { currentTarget: EventTarget & HTMLInputElement }

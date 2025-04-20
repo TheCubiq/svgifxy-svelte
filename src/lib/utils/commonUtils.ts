@@ -38,7 +38,7 @@ export const getMousePos = (e: GestureEvent) => {
 
 // https://stackoverflow.com/a/17323608
 // % in js is not modulo, it's remainder
-export const mod = (n: number, m:number) => {
+export const mod = (n: number, m: number) => {
   return ((n % m) + m) % m;
 };
 
