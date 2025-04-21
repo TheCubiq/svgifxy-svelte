@@ -58,8 +58,18 @@
         const projectedValue = (dx * Math.cos(angleRad) + dy * Math.sin(angleRad)) + 0.5;
         
         // Clamp the value between 0 and 1 and round to 3 decimal places
-        value = roundTo(Math.max(0, Math.min(1, projectedValue)), 3);
-        
+        // value = roundTo(Math.max(0, Math.min(1, projectedValue)), 3);
+        value = roundTo(projectedValue, 3);
+
+        // min 
+        if (clamping.min) {
+            value = Math.max(0, value);
+        }
+        // max
+        if (clamping.max) {
+            value = Math.min(1, value);
+        }
+
         dispatch('change', { value });
     }
 
@@ -88,6 +98,14 @@
     cursor={cursorStyle}
     {infiniteMouse}
     {sensitivitySettings} 
+
+    clamping={{
+        minX: false,
+        maxX: false,
+        minY: false,
+        maxY: false
+    }}
+
     defaultX={0.5 + Math.cos(angleRad) * (defaultValue - 0.5)}
     defaultY={0.5 + Math.sin(angleRad) * (defaultValue - 0.5)}
     
