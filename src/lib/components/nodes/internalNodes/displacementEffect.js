@@ -7,9 +7,12 @@ const nodeSetup = {
     {
       displayName: 'Scale',
       name: 'scale',
-      type: 'number',
-      default: '10',
-      description: 'The scale of displacement'
+      type: 'slider',
+      default: '5',
+      controllerConfig: {
+          min: -500,
+          max: 500
+      }
     },
     {
       displayName: 'X Channel',

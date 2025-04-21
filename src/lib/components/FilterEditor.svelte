@@ -16,8 +16,16 @@
 	import { getRandomPosition } from '$lib/utils/commonUtils';
 	import Sidebar from './Sidebar.svelte';
 	import { dndType } from '$lib/stores';
-	import { xyFilterNodes as nodeTypes } from './_nodes';
+	// import { xyFilterNodes as nodeTypes } from './_nodes';
 	import { createPortal } from '$lib/utils/portal';
+	import DynamicNode from './nodes/DynamicNode.svelte';
+	import PreviewNode from './nodes/PreviewNode.svelte';
+	
+	// Simple nodeTypes with just Dynamic and Preview nodes
+	const nodeTypes = {
+		preview: PreviewNode,
+		dynamic: DynamicNode
+	};
 
 	const { screenToFlowPosition } = useSvelteFlow();
 
@@ -102,7 +110,18 @@
 			position = getRandomPosition();
 		}
 		const id = `node-${Math.random().toString(36).substring(2, 11)}`;
-		nodes.update((n) => [...n, ({ id, type, position } as Node)]);
+		
+		// All nodes except preview are dynamic
+		// gotta love the ai slop 🤷‍♂️
+		const nodeType = type === 'preview' ? 'preview' : 'dynamic';
+
+		nodes.update((n) => [...n, ({
+			id,
+			type: nodeType,
+			data: { type }, // Pass the filter type to DynamicNode
+			position
+		} as Node)]);
+		
 		dndType.set(null);
 	};
 </script>

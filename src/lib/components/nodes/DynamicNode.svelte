@@ -12,6 +12,7 @@
     import { onMount } from 'svelte';
 	import SelectInput from './controllers/SelectInput.svelte';
     import ControllerDefines from './controllers/ControllerDefines.svelte';
+    import { nodeRegistry } from './nodeRegistry';
 
     type DynamicNode = Node<{
         scriptable: string;
@@ -21,6 +22,8 @@
     type $$Props = NodeProps<DynamicNode>;
     export let id: $$Props['id'];
     export let data: $$Props['data'];
+    // Add autocompile prop defaulting to true
+    export let autocompile = true;
     
     const { updateNodeData } = useSvelteFlow();
 
@@ -47,20 +50,27 @@
     });
 
     const handleCompile = () => {
-        const wrapped = `${nodeInternals}; ${data.scriptable}; return {nodeSetup, nodeLogic};`;
-        const compiled = new Function(wrapped)();
-        nodeSetup = compiled.nodeSetup;
-        nodeLogic = compiled.nodeLogic;
-        nodeInputs = nodeSetup.props;
-        nodeInputHandles = nodeSetup.inputs ?? [];
+        const wrapped = `
+            ${nodeInternals}
+            ${data.scriptable}
+            return {nodeSetup, nodeLogic};
+        `;
+        try {
+            const compiled = new Function(wrapped)();
+            nodeSetup = compiled.nodeSetup;
+            nodeLogic = compiled.nodeLogic;
+            nodeInputs = nodeSetup.props;
+            nodeInputHandles = nodeSetup.inputs ?? [];
 
-        // todo: fix this mf
-        const props = nodeSetup.props.reduce((acc: any, i: any) => { 
-            acc[i.name] = i.name in data.customProps ? data.customProps[i.name] : i.default;
-            return acc;
-        }, {});
+            const props = nodeSetup.props.reduce((acc: any, i: any) => { 
+                acc[i.name] = i.name in data.customProps ? data.customProps[i.name] : i.default;
+                return acc;
+            }, {});
 
-        updateDynamicNode(props);
+            updateDynamicNode(props);
+        } catch (err) {
+            console.error('Failed to compile node:', err);
+        }
     };
 
     const handleInput = (e: SvelteInputEvent, i: { name: string | number; }) => {
@@ -75,8 +85,18 @@
         if (c.length > 0) updateDynamicNode(data.customProps)
     })
         
-    onMount(() => {
-        updateNodeData(id, { scriptable: initialEffect, customProps: {} });
+    onMount(async () => {
+        // Check if we have a preset from the type
+        const preset = data.type && nodeRegistry[data.type];
+        await updateNodeData(id, { 
+            scriptable: preset || initialEffect,
+            customProps: {},
+            svgFilter: ''
+        });
+        // await tick(); // Wait for data update
+        if (preset && autocompile) {
+            handleCompile();
+        }
     });
 </script>
 
