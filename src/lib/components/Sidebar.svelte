@@ -10,7 +10,8 @@
   // Get available filter scripts + preview node
   const availableNodes = [
       ...getNodeInfo(),
-      { id: 'preview', displayName: 'Preview', description: 'Preview filter output' }
+      { id: 'preview', displayName: 'Preview', description: 'Preview filter output' },
+      { id: 'sourceGraphic', displayName: "Source" } 
   ];
 
   const onDragStart = (event: DragEvent, nodeType: string) => {

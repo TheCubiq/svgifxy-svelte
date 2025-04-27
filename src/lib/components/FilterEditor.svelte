@@ -20,11 +20,13 @@
 	import { createPortal } from '$lib/utils/portal';
 	import DynamicNode from './nodes/DynamicNode.svelte';
 	import PreviewNode from './nodes/PreviewNode.svelte';
+	import SourceGraphicNode from './nodes/SourceGraphicNode.svelte';
 	
 	// Simple nodeTypes with just Dynamic and Preview nodes
 	const nodeTypes = {
 		preview: PreviewNode,
-		dynamic: DynamicNode
+		sourceGraphic: SourceGraphicNode,
+		dynamic: DynamicNode,
 	};
 
 	const { screenToFlowPosition } = useSvelteFlow();
@@ -113,7 +115,10 @@
 		
 		// All nodes except preview are dynamic
 		// gotta love the ai slop 🤷‍♂️
-		const nodeType = type === 'preview' ? 'preview' : 'dynamic';
+		// const nodeType = type === 'preview' ? 'preview' : 'dynamic';
+
+		// check if nodeType is in nodeTypes
+		const nodeType = type in nodeTypes ? type : 'dynamic';
 
 		nodes.update((n) => [...n, ({
 			id,
