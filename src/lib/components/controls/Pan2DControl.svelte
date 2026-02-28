@@ -49,9 +49,9 @@
       width: 100%;
       height: 100%;
       padding: 0.5em;
-      border-radius: 0.3em;
-      background: var(--clr-surface);
-      font-size: 0.8em;
+      border-radius: var(--corner-rad);
+      background: var(--clr-text-t50);
+      font-size: 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -59,13 +59,22 @@
       position: relative;
       aspect-ratio: 1;
       min-width: 5rem;
+      border: 1px solid var(--clr-text-t100);
+      transition: border-color 0.2s;
+  }
+
+  .pan2d-area:hover {
+      border-color: var(--clr-primary-t300);
   }
 
   .values {
       z-index: 1;
-      background: var(--clr-surface-t50);
-      padding: 0.3em;
-      border-radius: 0.2em;
-      backdrop-filter: blur(2px);
+      background: var(--clr-bg-t600);
+      padding: 0.25em 0.4em;
+      border-radius: 0.25rem;
+      backdrop-filter: blur(4px);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--clr-text-t600);
   }
 </style>

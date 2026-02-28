@@ -82,44 +82,54 @@
 <style>
   .floating-window {
     position: fixed;
-    background: var(--clr-bg-t700, #222);
-    border-radius: 1em;
-    box-shadow: 0 2px 16px #0008;
-    padding: 1em;
+    background: var(--clr-bg-t800);
+    border-radius: 0.75rem;
+    box-shadow: 
+      0 0 0 1px var(--clr-text-t100),
+      0 8px 32px -8px rgb(0 0 0 / 50%);
+    padding: 0.75em;
     z-index: 9999;
     left: 2rem;
     top: 2rem;
     min-width: 5rem;
     min-height: 5rem;
     user-select: none;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.25s var(--ease-out-expo);
     cursor: grab;
     backdrop-filter: var(--ftr-glass);
-    border: 1px solid var(--clr-text-t200, #444);
+    border: 1px solid var(--clr-text-t100);
   }
+
+  .floating-window:active {
+    cursor: grabbing;
+    box-shadow:
+      0 0 0 1px var(--clr-primary-t200),
+      0 12px 40px -8px rgb(0 0 0 / 60%),
+      0 0 20px var(--clr-primary-t100);
+  }
+
   .floating-header {
     user-select: none;
     position: absolute;
     z-index: 99;
     padding: 0.3em;
-    filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(1px 2px 4px rgb(0 0 0 / 60%));
     right: 0;
   }
   .pop-btn {
     background: transparent;
     border: none;
-    color: var(--clr-text, #fff);
+    color: var(--clr-text);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 0.3rem;
     padding: 0.2em 0.4em;
-    transition: 0.2s;
-    transition-property: background, opacity;
+    transition: all 0.2s var(--ease-out-expo);
     opacity: 0.3;
-
   }
   .pop-btn:hover {
-    background: var(--clr-bg-t100, #333);
+    background: var(--clr-text-t100);
     opacity: 1;
+    color: var(--clr-primary);
   }
   .floating-content {
     position: relative;

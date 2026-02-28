@@ -1,3 +1,5 @@
+/* === ICON MICRO-ANIMATIONS === */
+
 .lucide-maximize-2 {
   --_t: 0px;
   --_h: 0px;
@@ -14,7 +16,6 @@
     --_t: 12px;
   }
 
-
   > * {
     transition: inherit;
   }
@@ -28,5 +29,92 @@
   :nth-child(2 of polyline) {
     transform: translate( var(--_tc), calc(var(--_tc) * -1));
   }
+}
 
+/* === REUSABLE ANIMATION KEYFRAMES === */
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 4px var(--clr-primary-t200); }
+  50% { box-shadow: 0 0 12px var(--clr-primary-t400); }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* === ANIMATION UTILITIES === */
+
+.hover-lift {
+  transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -4px rgb(0 0 0 / 35%);
+  }
+}
+
+.stagger-children > * {
+  animation: slide-up-fade 0.4s var(--ease-out-expo) backwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 30ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 90ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 210ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(10) { animation-delay: 270ms; }
+.stagger-children > *:nth-child(11) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(12) { animation-delay: 330ms; }
+.stagger-children > *:nth-child(13) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(14) { animation-delay: 390ms; }
+.stagger-children > *:nth-child(15) { animation-delay: 420ms; }
+
+.skeleton-pulse {
+  background: linear-gradient(90deg, var(--clr-text-t50) 25%, var(--clr-text-t100) 50%, var(--clr-text-t50) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--corner-rad);
 }

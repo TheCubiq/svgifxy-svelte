@@ -17,5 +17,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    animation: fade-in 0.6s var(--ease-out-expo);
   }
 </style>

@@ -70,13 +70,14 @@
 
 <style>
 	.color {
-		border-radius: 0.3em;
-		outline: solid 1px var(--clr-text-t200);
+		border-radius: var(--corner-rad);
+		outline: solid 1px var(--clr-text-t100);
 		aspect-ratio: 1;
 		background-size: cover;
     overflow: hidden;
     position: relative;
 		width: 100%;
+		transition: outline-color 0.2s;
 
     
 		&.resizable {
@@ -87,42 +88,17 @@
       background-image: url(https://media1.tenor.com/m/BCAxaLlW-soAAAAd/smile-cat.gif);
     }
 
-    
+		&:hover {
+			outline-color: var(--clr-text-t200);
+		}
 
     &::before {
       content: '';
       position: absolute;
       inset: 0;
       backdrop-filter: var(--f);
-      /* display: none; */
     }
-
-    /* &:has(:not(.content))::before {
-      display: block;
-    } */
 	}
-  .floating-header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0.5em;
-    margin-bottom: 0.2em;
-  }
-  .pop-btn {
-    background: transparent;
-    border: none;
-    color: var(--clr-text, #fff);
-    cursor: pointer;
-    border-radius: 4px;
-    padding: 0.2em 0.4em;
-    transition: background 0.2s;
-  }
-  .pop-btn:hover {
-    background: var(--clr-text-t100, #333);
-  }
-  .floating-preview-window {
-    /* see inline style above */
-  }
   .content {
     position: absolute;
     inset: 0;

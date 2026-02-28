@@ -168,12 +168,14 @@
 </div>
 
 <style>
-  input {
+  :global(input) {
     width: 4em;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
   }
 
   .matrix {
     display: grid;
-    gap: .3em;
+    gap: .25em;
   }
 </style>

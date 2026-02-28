@@ -47,58 +47,63 @@
 
 <style>
 	dialog {
-		max-width: 16rem;
+		max-width: 18rem;
 		margin: auto;
 		width: calc(100% - 2rem);
-		background: var(--clr-bg-t600);
+		background: var(--clr-bg-t800);
 		backdrop-filter: var(--ftr-glass);
 		color: var(--clr-text);
 		cursor: default;
-
-		border-radius: var(--corner-rad);
-    padding: 1.3em;
-    border: 1px solid var(--clr-text-t200);
+		border-radius: 0.75rem;
+		padding: 1.2em;
+		border: 1px solid var(--clr-text-t100);
+		box-shadow: 0 16px 48px -8px rgb(0 0 0 / 50%);
+		position: relative;
+		overflow: visible;
 	}
+
+	/* Top accent line */
+	dialog::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 1.5em;
+		right: 1.5em;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, var(--clr-primary-t500) 30%, var(--clr-primary-t500) 70%, transparent);
+		border-radius: 1px;
+		pointer-events: none;
+	}
+
 	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
-		backdrop-filter: blur(4px);
+		background: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(6px) saturate(0.8);
 	}
 
 	hr {
-		opacity: 0.2;
+		border: none;
+		height: 1px;
+		background: var(--clr-text-t100);
 	}
 
 	dialog > div {
-		padding: 1em;
+		padding: 0.75em;
 	}
+
 	dialog[open] {
-		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+		animation: scale-in 0.35s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
 	}
-	@keyframes zoom {
-		from {
-			transform: scale(0.95);
-		}
-		to {
-			transform: scale(1);
-		}
-	}
+
 	dialog[open]::backdrop {
-		animation: fade 0.2s ease-out;
+		animation: fade-in 0.25s ease-out;
 	}
-	@keyframes fade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
+
 	button {
 		display: block;
 	}
 
 	button {
-		background-color: var(--clr-bg);
+		background-color: var(--clr-text-t100);
 		aspect-ratio: 1;
 		border-radius: 50%;
 		display: flex;
@@ -106,9 +111,14 @@
 		padding: 0.4em;
 		color: var(--clr-text);
 		border: none;
-
 		margin-inline: auto;
 		cursor: pointer;
+		transition: all 0.2s var(--ease-out-expo);
+	}
+
+	button:hover {
+		background-color: rgb(from var(--clr-danger) r g b / 15%);
+		color: var(--clr-danger);
 	}
 
 	div {

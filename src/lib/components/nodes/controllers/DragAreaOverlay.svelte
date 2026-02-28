@@ -20,11 +20,9 @@
 		aspect-ratio: 1;
 		min-width: 5rem;
 
-		border-radius: 0.3em;
+		border-radius: var(--corner-rad);
 
-		/* grid using linear gradient */
-
-		--_clr-grid: var(--clr-text-t100);
+		--_clr-grid: var(--clr-text-t50);
 
 		background-image: 
 			linear-gradient(90deg, var(--_clr-grid) 1px, transparent 1px),
@@ -34,6 +32,6 @@
 
 		background-position: var(--_x, 0) var(--_y, 0);
 
-    border: solid var(--clr-text-t100);
+    border: 1px solid var(--clr-text-t100);
   }
 </style>

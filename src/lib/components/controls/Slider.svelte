@@ -38,16 +38,9 @@
 </Pan1DArea>
 
 <style>
-    .controller-wrapper {
-        width: 10rem;
-        box-shadow: 6px 7px 16px 10px #0000000f;
-        backdrop-filter: var(--ftr-glass); 
-        border-radius: 0.3em;
-    }
-
     .pan1d-area {
-        border-radius: 0.5em;
-        box-shadow: 6px 7px 16px 10px #0000000f;
+        border-radius: var(--corner-rad);
+        box-shadow: inset 0 1px 4px rgb(0 0 0 / 20%);
         padding: 0.5em;
         display: flex;
         flex-direction: column;
@@ -55,7 +48,22 @@
         justify-content: center;
         font-size: 0.5em;
 
-        background: linear-gradient(90deg, var(--clr-text-t100) var(--_v, 0%), transparent 0px);
-        border: solid 2px var(--clr-text-t100);
+        background: linear-gradient(90deg, var(--clr-primary-t200) var(--_v, 0%), transparent 0px);
+        border: 1px solid var(--clr-text-t100);
+        transition: border-color 0.2s;
+        font-family: var(--font-mono);
+        color: var(--clr-text-t600);
+    }
+
+    .pan1d-area:hover {
+        border-color: var(--clr-primary-t300);
+    }
+
+    .pan1d-area p:first-child {
+        font-size: 0.8em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--clr-text-t300);
+        font-family: var(--font-body);
     }
 </style>

@@ -37,7 +37,7 @@
 
 <div class="node">
 	<Handle type="target" position={Position.Left} isConnectable={limitedConnect($c_in1)} />
-	<div class="label">SVG Filter:</div>
+	<div class="label">Preview</div>
 
 	<div class="controls">
 		 <Select
@@ -53,7 +53,9 @@
 	</div>
 
 	{#if $nodesData.length === 0}
-		<div>Nothing to preview</div>
+		<div class="empty-state">
+			<span>Connect a node</span>
+		</div>
 	{:else}
 		<div class="wrap">
 			<SvgPreview {id} nodeData={$nodesData} resizable bg cssCompile={renderMode === 'css'} floatable={true} />
@@ -63,12 +65,27 @@
 
 <style>
 	.wrap {
-		padding: 0.5em;
-		min-width: 5rem;
+		padding: 0.4em;
+		min-width: 6rem;
+	}
+
+	.label {
+		font-family: var(--font-display);
+		font-size: 0.85rem;
+		font-weight: 600;
+		padding: 0.3em 0.4em;
 	}
 
 	.controls {
-		padding: 0.5em;
-		border-bottom: 1px solid var(--clr-text-t200);
+		padding: 0.4em;
+		border-bottom: 1px solid var(--clr-text-t100);
+	}
+
+	.empty-state {
+		padding: 1.5em 1em;
+		text-align: center;
+		color: var(--clr-text-t300);
+		font-size: 0.75rem;
+		font-style: italic;
 	}
 </style>

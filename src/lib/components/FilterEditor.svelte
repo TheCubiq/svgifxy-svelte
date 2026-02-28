@@ -132,7 +132,6 @@
 </script>
 
 <div class="editor">
-	<!-- fitView -->
 		<SvelteFlow
 			{nodes}
 			{edges}
@@ -142,16 +141,23 @@
 			on:drop={handleAddNode}
 			on:dragover={onDragOver}
 		>
-			<Background bgColor="transparent"/>
+			<Background bgColor="transparent" gap={24} />
 		</SvelteFlow>
 
-		<Sidebar {nodeTypes} on:addNode={handleAddNode} />
+		<Sidebar on:addNode={handleAddNode} />
 		
 		<div use:createPortal={'right-sidebar'} class="portal">
 			<!-- Portal Placeholder -->
 		</div>
 		<div use:createPortal={'floating-preview'} class="portal">
 			<!-- Floating Preview Portal Placeholder -->
+		</div>
+
+		<!-- Status bar -->
+		<div class="status-bar">
+			<span class="status-label">FORGE</span>
+			<span class="status-dot"></span>
+			<span class="status-info">{$nodes.length} node{$nodes.length !== 1 ? 's' : ''}</span>
 		</div>
 </div>
 
@@ -160,5 +166,47 @@
 		width: 100%;
 		height: 100%;
 		font-size: 16px;
+		position: relative;
+	}
+
+	.status-bar {
+		position: absolute;
+		bottom: 0.75rem;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.35rem 0.85rem;
+		background: var(--clr-bg-t700);
+		backdrop-filter: var(--ftr-glass);
+		border: 1px solid var(--clr-text-t100);
+		border-radius: 99em;
+		font-size: 0.7rem;
+		color: var(--clr-text-t400);
+		pointer-events: none;
+		user-select: none;
+		animation: slide-up-fade 0.6s var(--ease-out-expo) 0.3s backwards;
+		z-index: 5;
+	}
+
+	.status-label {
+		font-family: var(--font-display);
+		font-weight: 700;
+		color: var(--clr-primary-t600);
+		letter-spacing: 0.08em;
+		font-size: 0.65rem;
+	}
+
+	.status-dot {
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: var(--clr-primary-t400);
+	}
+
+	.status-info {
+		font-family: var(--font-mono);
+		font-size: 0.65rem;
 	}
 </style>

@@ -58,6 +58,7 @@
     on:keydown={e => e.key === 'Enter' && toggleDropdown()}
     aria-expanded={isOpen}
     aria-haspopup="listbox"
+    aria-controls="select-dropdown"
     role="combobox"
   >
     {#if selectedItem}
@@ -77,7 +78,7 @@
   </div>
   
   {#if isOpen}
-    <div class="dropdown" transition:slide={{ duration: 150 }} role="listbox">
+    <div class="dropdown" transition:slide={{ duration: 150 }} role="listbox" id="select-dropdown">
       {#each items as item, i}
         <div 
           class="option" 
@@ -116,19 +117,26 @@
   .custom-select-container {
     position: relative;
     width: 100%;
-    font-family: inherit;
+    font-family: var(--font-body);
   }
   
   .selected-option {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
+    padding: 0.5em 0.65em;
     border: 1px solid var(--clr-text-t100);
     background-color: var(--clr-bg-t300);
-    border-radius: 4px;
+    border-radius: var(--corner-rad);
     cursor: pointer;
     user-select: none;
+    transition: all 0.2s var(--ease-out-expo);
+    font-size: 0.8rem;
+  }
+
+  .selected-option:hover {
+    border-color: var(--clr-text-t200);
+    background-color: var(--clr-text-t50);
   }
   
   .disabled .selected-option {
@@ -142,8 +150,9 @@
   }
   
   .arrow {
-    font-size: 0.8em;
-    transition: transform 0.2s ease;
+    font-size: 0.7em;
+    transition: transform 0.25s var(--ease-out-expo);
+    color: var(--clr-text-t300);
   }
   
   .arrow.open {
@@ -155,20 +164,22 @@
     top: 100%;
     left: 0;
     right: 0;
-    margin-block: .15em;
-    background-color: var(--clr-bg);
+    margin-block: 4px;
+    background-color: var(--clr-bg-t900);
     border: 1px solid var(--clr-text-t100);
-    /* border-top: none; */
-    border-radius: 0 0 4px 4px;
+    border-radius: var(--corner-rad);
     max-height: 240px;
     overflow-y: auto;
     z-index: 10;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px -4px rgb(0 0 0 / 40%);
+    backdrop-filter: blur(16px) saturate(1.5);
   }
   
   .option {
-    padding: 10px 12px;
+    padding: 0.5em 0.65em;
     cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.15s;
   }
   
   .option:hover {
@@ -176,20 +187,22 @@
   }
   
   .option.selected {
-    background-color: #e6f7ff;
+    background-color: var(--clr-primary-t100);
+    color: var(--clr-primary);
   }
   
   .option-content {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5em;
   }
   
   .icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+    color: var(--clr-text-t400);
   }
 </style>

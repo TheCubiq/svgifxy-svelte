@@ -104,7 +104,7 @@
     bind:show={showSettings} 
     title={`Edit ${nodeSetup?.displayName || 'Node'}`}
 >
-    <div>
+    <div class="editor-info">
         <h3>Node Script</h3>
         <p>Edit the code to modify node behavior</p>
     </div>
@@ -112,8 +112,9 @@
     <CodeMirror bind:value={data['scriptable']} lang={javascript()} theme={oneDark} />
     
     <svelte:fragment slot="overlay">
-        <button class="clickable" on:click={handleCompile}>
+        <button class="compile-btn" on:click={handleCompile}>
             <HardDriveDownloadIcon size="1.2em" />
+            <span>Compile</span>
         </button>
     </svelte:fragment>
 </RightSidebar>
@@ -148,7 +149,10 @@
                 />
             {/each}
         {:else}
-            <p>Node Not Loaded Yet</p>
+            <div class="loading-state">
+                <div class="skeleton-bar"></div>
+                <div class="skeleton-bar short"></div>
+            </div>
         {/if}
         
         </div>
@@ -160,37 +164,91 @@
     
 <style>
 .node {
-    min-width: 5rem;
+    min-width: 6rem;
 }
 
 .title-wrapper {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 0.5em;
 }
 
 .settings {
     aspect-ratio: 1;
-    border-radius: 99em;
+    border-radius: 0.3rem;
     display: flex;
     align-self: center;
-    padding: 0.4em;
-    color: var(--clr-text);
+    padding: 0.35em;
+    color: var(--clr-text-t400);
     border: none;
     cursor: pointer;
     background-color: transparent;
     border: solid 1px var(--clr-text-t100);
-    backdrop-filter: blur(1px);
+    transition: all 0.2s var(--ease-out-expo);
 }
 
-button.clickable {
+.settings:hover {
+    color: var(--clr-primary);
+    border-color: var(--clr-primary-t300);
+    background-color: var(--clr-primary-t100);
+}
+
+.compile-btn {
     cursor: pointer;
-    background-color: var(--clr-text-t100);
-    color: var(--clr-text);
+    background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-400));
+    color: var(--clr-bg);
     border: none;
-    padding: 0.75em;
+    padding: 0.5em 0.85em;
     border-radius: var(--corner-rad);
     pointer-events: auto;
     display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s var(--ease-out-expo);
+    box-shadow: 0 2px 8px var(--clr-primary-t300);
+}
+
+.compile-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px var(--clr-primary-t400);
+}
+
+.compile-btn:active {
+    transform: translateY(0);
+}
+
+.editor-info h3 {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+}
+
+.editor-info p {
+    font-size: 0.75rem;
+    color: var(--clr-text-t400);
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+    padding: 0.25em 0;
+}
+
+.skeleton-bar {
+    height: 0.6em;
+    border-radius: 0.3em;
+    background: linear-gradient(90deg, var(--clr-text-t50) 25%, var(--clr-text-t100) 50%, var(--clr-text-t50) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    width: 100%;
+}
+
+.skeleton-bar.short {
+    width: 60%;
 }
 
 .handle-wrapper {

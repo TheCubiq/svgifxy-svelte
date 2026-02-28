@@ -50,33 +50,48 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		color: var(--clr-text-t100);
+		color: var(--clr-text-t300);
 		font-size: 1em;
+		pointer-events: none;
 	}
 
 	.knob {
 		height: 100%;
 		aspect-ratio: 1;
 		border-radius: 50%;
-		background: var(--clr-text-t100);
+		background: conic-gradient(from -150deg, var(--clr-primary-t200) 0deg, var(--clr-text-t100) 300deg, transparent 300deg);
 		position: relative;
 		transform: rotate(var(--_rotation));
-		/* transition: transform 0.05s; */
 		border: 2px solid var(--clr-text-t100);
+		transition: border-color 0.2s;
+	}
+
+	.knob:hover {
+		border-color: var(--clr-primary-t400);
 	}
 
 	.indicator {
 		position: absolute;
-		width: 0.25em;
-		height: 0.8em;
-		background: var(--clr-text-t100);
+		width: 3px;
+		height: 0.7em;
+		background: var(--clr-primary);
 		left: 50%;
 		transform: translateX(-50%);
 		border-radius: 1em;
+		box-shadow: 0 0 4px var(--clr-primary-t300);
 	}
 
 	.value-text {
 		font-size: 0.5em;
-		color: var(--clr-text);
+		color: var(--clr-text-t600);
+		font-family: var(--font-mono);
+	}
+
+	.value-text:first-child {
+		font-size: 0.4em;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--clr-text-t300);
+		font-family: var(--font-body);
 	}
 </style>

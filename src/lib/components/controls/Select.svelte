@@ -116,22 +116,29 @@
 
 	.selected-option {
 		width: 100%;
-		padding: 0.5em;
-		border-radius: 0.3em;
+		padding: 0.45em 0.6em;
+		border-radius: var(--corner-rad);
 		background: var(--clr-bg-t50);
-		border: 2px solid var(--clr-text-t100);
+		border: 1px solid var(--clr-text-t100);
 		color: var(--clr-text);
-		font-size: 0.8em;
+		font-size: 0.75rem;
+		font-family: var(--font-body);
 		cursor: pointer;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		transition: all 0.2s var(--ease-out-expo);
+	}
+
+	.selected-option:hover {
+		border-color: var(--clr-text-t200);
+		background: var(--clr-text-t50);
 	}
 
 	.arrow {
-		color: var(--clr-text-t100);
-		font-size: 0.8em;
-		transition: transform 0.2s ease;
+		color: var(--clr-text-t300);
+		font-size: 0.7em;
+		transition: transform 0.25s var(--ease-out-expo);
 	}
 
 	.arrow.open {
@@ -143,29 +150,37 @@
 		top: 100%;
 		left: 0;
 		right: 0;
-		margin-top: 0.2em;
-		background: rgba(var(--clr-bg-rgb), 0.5);
-		border: 2px solid var(--clr-text-t100);
-		border-radius: 0.3em;
+		margin-top: 4px;
+		background: var(--clr-bg-t900);
+		border: 1px solid var(--clr-text-t100);
+		border-radius: var(--corner-rad);
 		max-height: 200px;
 		overflow-y: auto;
 		z-index: 100;
-		backdrop-filter: blur(12px);
+		backdrop-filter: blur(16px) saturate(1.5);
+		box-shadow: 0 8px 24px -4px rgb(0 0 0 / 40%);
 	}
 
 	.option {
-		padding: 0.5em;
+		padding: 0.45em 0.6em;
 		cursor: pointer;
-		font-size: 0.8em;
+		font-size: 0.75rem;
 		color: var(--clr-text);
 		background: none;
 		border: none;
-    width: 100%;
+		width: 100%;
+		text-align: left;
+		font-family: var(--font-body);
+		transition: background 0.15s;
 	}
 
-	.option:hover,
-	.option.selected {
+	.option:hover {
 		background: var(--clr-text-t100);
+	}
+
+	.option.selected {
+		background: var(--clr-primary-t100);
+		color: var(--clr-primary);
 	}
 
 	.select-wrapper:focus {
@@ -173,6 +188,7 @@
 	}
 
 	.select-wrapper:focus .selected-option {
-		border-color: var(--clr-text);
+		border-color: var(--clr-primary-t400);
+		box-shadow: 0 0 0 2px var(--clr-primary-t100);
 	}
 </style>

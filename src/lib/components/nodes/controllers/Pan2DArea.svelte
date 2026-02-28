@@ -515,15 +515,18 @@
 
 	.sensitivity-indicator {
 		position: absolute;
-		top: 8px;
-		right: 8px;
-		background-color: rgba(0, 0, 0, 0.6);
-		color: white;
-		border-radius: 4px;
-		padding: 4px 8px;
-		font-size: 12px;
+		top: 6px;
+		right: 6px;
+		background-color: var(--clr-bg-t800);
+		color: var(--clr-primary);
+		border-radius: var(--corner-rad);
+		padding: 3px 7px;
+		font-size: 0.65rem;
+		font-family: var(--font-mono);
 		pointer-events: none;
 		z-index: 10;
 		transition: opacity 0.3s ease;
+		border: 1px solid var(--clr-primary-t200);
+		backdrop-filter: blur(8px);
 	}
 </style>
