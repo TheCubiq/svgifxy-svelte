@@ -123,6 +123,9 @@ export const convertToSvgFilter = (id: string, nodesData: Node[] | Node) => {
 
   nodesData.forEach((node) => {
 
+    // SourceGraphic / SourceAlpha inputs and must not be emitted as an element.
+    if (node.type === 'sourceGraphic') return;
+
     let element = [{}];
 
     if (node.type === 'dynamic') {

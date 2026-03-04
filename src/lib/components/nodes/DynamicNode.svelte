@@ -39,7 +39,7 @@
 
     const getConnectionObject = () => {
         return Object.entries(inputConnections).reduce((acc: any, [key, value]: any, i) => {
-            acc[nodeInputHandles[i]] = value.source;
+            acc[nodeInputHandles[i]] = value.sourceHandle || value.source;
             return acc;
         }, {});        
     }
