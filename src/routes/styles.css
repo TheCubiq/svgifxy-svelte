@@ -298,7 +298,6 @@ body {
 
     /* Hover state */
     .svelte-flow__node:hover & {
-      transform: translateY(-1px);
       box-shadow: 
         0 0 0 var(--_outline-width) var(--clr-text-t200),
         0 0 var(--_glow-spread) var(--_glow-color),
@@ -345,13 +344,16 @@ body {
       height: var(--_handle-size);
       width: var(--_handle-size);
       border-radius: 50%;
-      transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+      transition: 
+        scale 0.5s var(--ease-spring),
+        transform 0.2s var(--ease-spring), 
+        box-shadow 0.2s;
 
       --xy-handle-background-color: var(--clr-bg);
       --xy-handle-border-color: var(--clr-text-t300);
 
       &:hover {
-        transform: scale(1.4);
+        scale: 1.4;
         box-shadow: 0 0 8px var(--clr-primary-t400);
         --xy-handle-border-color: var(--clr-primary);
       }
